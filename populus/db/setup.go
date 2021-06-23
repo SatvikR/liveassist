@@ -3,6 +3,7 @@ package db
 
 import (
 	"context"
+	"log"
 
 	"github.com/go-pg/pg/v10"
 )
@@ -17,6 +18,26 @@ func Connect(addr string, user string, password string, name string) {
 		Password: password,
 		Database: name,
 	})
+}
+
+// Close will disconnect from the database
+func Close() error {
+	return db.Close()
+}
+
+// Setup will create schemas
+func Setup() error {
+	// return loadSchema()
+	if err := Healthcheck(); err != nil {
+		return err
+	}
+	log.Println("Connected to database")
+
+	if err := loadSchema(); err != nil {
+		return err
+	}
+	log.Println("Created tables")
+	return nil
 }
 
 // Healthcheck pings the database to make sure it is connected properly.

@@ -23,11 +23,8 @@ func Setup() {
 		config.DBPassword,
 		config.DBName,
 	)
-
-	if err := db.Healthcheck(); err != nil {
-		log.Fatalf("Failed to connect to db: %s\n", err)
+	defer db.Close()
+	if err := db.Setup(); err != nil {
+		log.Fatalf("Unable to setup database: %s", err.Error())
 	}
-
-	log.Println("Connected to database")
-
 }
