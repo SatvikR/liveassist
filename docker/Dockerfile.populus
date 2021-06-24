@@ -1,0 +1,21 @@
+FROM golang:1.16.5 as build
+
+WORKDIR /usr/src
+
+COPY ./go.mod ./go.sum ./
+COPY ./clavis ./clavis
+COPY ./omnis ./omnis
+COPY ./populus ./populus
+ENV GO111MODULE=on
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./bin/populus ./populus
+
+FROM alpine:latest
+
+WORKDIR /app
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
+RUN chmod +x /wait
+
+COPY --from=build /usr/src/bin/populus .
+EXPOSE 8080
+CMD /wait && ./populus

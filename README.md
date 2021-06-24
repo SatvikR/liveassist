@@ -16,7 +16,7 @@ MIT
 - [ ] Channel models
 - [ ] RabbitMQ
 - [ ] AMPQ functions to consume and produce
-- [ ] Dockerfile's and docker-compose file for development
+- [x] Dockerfile's and docker-compose file for development
 - [ ] Selective data replication for users
 - [ ] Clavis auth middleware
 - [x] Auth server

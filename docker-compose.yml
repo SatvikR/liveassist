@@ -1,0 +1,41 @@
+version: '3'
+
+# only to be used in development
+
+services:
+  populus:
+    build:
+      dockerfile: ./docker/Dockerfile.populus
+    environment:
+      - DB_ADDR=postgres:5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=liveassist
+      - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
+      - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
+      - DOMAIN=localhost
+      - WAIT_HOSTS=postgres:5432
+    depends_on:
+      - postgres
+  verum:
+    build:
+      dockerfile: ./docker/Dockerfile.verum
+    environment:
+      - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
+      - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
+      - DOMAIN=localhost
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=liveassist
+  nginx:
+    image: nginx
+    volumes:
+      - ./docker/dev/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8080:80
+    depends_on:
+      - populus
+      - verum
