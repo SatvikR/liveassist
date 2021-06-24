@@ -10,12 +10,23 @@ import (
 
 // StartServer will start an http server. Routes are:
 // POST /signup, POST /login, DELETE /logout
-func StartServer(port int, origins []string) {
+func StartServer(port int) {
 	r := gin.Default()
 
-	r.POST("/signup", signup)
-	r.POST("/login", login)
-	r.DELETE("/logout", logout)
+	g := r.Group("/api/users")
+
+	g.POST("/signup", signup)
+	g.POST("/login", login)
+	g.DELETE("/logout", logout)
+
+	var origins []string
+
+	if gin.Mode() == gin.ReleaseMode {
+		// TODO change this url to the prod url
+		origins = []string{"http://localhost:3000"}
+	} else {
+		origins = []string{"http://localhost:3000"}
+	}
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = origins

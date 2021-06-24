@@ -16,7 +16,7 @@ var (
 const (
 	// RefreshRoute is the route used to refresh the access tokens and
 	// is also the only route where we send refresh token cookies
-	RefreshRoute string = "/refresh"
+	RefreshRoute string = "/api/tokens/refresh"
 )
 
 func GetPort(portString string, defaultPort int) int {

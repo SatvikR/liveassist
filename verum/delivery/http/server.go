@@ -13,7 +13,9 @@ import (
 func StartServer(port int, origins []string) {
 	r := gin.Default()
 
-	r.PUT("/refresh", refresh)
+	g := r.Group("/api/tokens")
+
+	g.PUT("/refresh", refresh)
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = origins
