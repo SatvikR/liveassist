@@ -4,6 +4,16 @@
   A platform to get assistance with programming
 </div>
 
+## Structure
+
+| Directory | What it is                              |
+| --------- | --------------------------------------- |
+| clavis    | JWT Token utils                         |
+| omnis     | Global errors, constants, and functions |
+| populus   | User service                            |
+| verum     | Auth server                             |
+| docker    | docker images and config files          |
+
 ## Run locally
 
 ### API:
