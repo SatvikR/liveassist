@@ -4,11 +4,20 @@
   A platform to get assistance with programming
 </div>
 
-# LICENSE
+## Run locally
+
+### API:
+
+```sh
+docker-compose up -d
+# docker compose up -d on newer versions
+```
+
+## LICENSE
 
 MIT
 
-# TODO for MVP
+## TODO for MVP
 
 - [x] JWT functions
 - [x] Populus business logic
