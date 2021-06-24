@@ -4,8 +4,7 @@ version: '3'
 
 services:
   populus:
-    build:
-      dockerfile: ./docker/Dockerfile.populus
+    build: ./docker/Dockerfile.populus
     environment:
       - DB_ADDR=postgres:5432
       - DB_USER=postgres
@@ -18,8 +17,7 @@ services:
       postgres:
         condition: service_healthy
   verum:
-    build:
-      dockerfile: ./docker/Dockerfile.verum
+    build: ./docker/Dockerfile.verum
     environment:
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
       - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
