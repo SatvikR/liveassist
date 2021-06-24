@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/SatvikR/liveassist/clavis"
+	"github.com/SatvikR/liveassist/omnis"
 	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/SatvikR/liveassist/populus/db"
 )
@@ -13,7 +14,6 @@ import (
 var (
 	ErrHashFailed           error = errors.New("unable to hash password")
 	ErrUserExists           error = errors.New("user already exists")
-	ErrTokenGenFailed       error = errors.New("unable to generate tokens")
 	ErrWrongPassword        error = errors.New("incorrect password")
 	ErrUserNotFound         error = errors.New("user does not exist")
 	ErrPWVerificationFailed error = errors.New("could not verify passowrd")
@@ -31,9 +31,9 @@ func Signup(username string, password string, email string) (string, string, err
 		return "", "", ErrUserExists
 	}
 
-	accTok, refTok, err := generateTokens(id)
+	accTok, refTok, err := clavis.GenerateTokenPair(id, config.AccessTokenKey, config.RefreshTokenKey)
 	if err != nil {
-		return "", "", ErrTokenGenFailed
+		return "", "", omnis.ErrTokenGenFailed
 	}
 
 	return accTok, refTok, nil
@@ -52,38 +52,10 @@ func Login(username string, password string) (string, string, error) {
 		return "", "", ErrWrongPassword
 	}
 
-	accTok, refTok, err := generateTokens(user.ID)
+	accTok, refTok, err := clavis.GenerateTokenPair(user.ID, config.AccessTokenKey, config.RefreshTokenKey)
 	if err != nil {
-		return "", "", ErrTokenGenFailed
+		return "", "", omnis.ErrTokenGenFailed
 	}
 
 	return accTok, refTok, err
-}
-
-func generateTokens(id int64) (string, string, error) {
-	accTok, err := clavis.GenerateToken(
-		clavis.AccessToken,
-		clavis.CreateClaims(
-			id,
-			clavis.AccessToken,
-			clavis.AccessTokenDuration,
-		),
-		config.AccessTokenKey,
-	)
-	if err != nil {
-		return "", "", err
-	}
-	refTok, err := clavis.GenerateToken(
-		clavis.RefreshToken,
-		clavis.CreateClaims(
-			id,
-			clavis.RefreshToken,
-			clavis.RefreshTokenDuration,
-		),
-		config.RefreshTokenKey,
-	)
-	if err != nil {
-		return "", "", err
-	}
-	return accTok, refTok, nil
 }

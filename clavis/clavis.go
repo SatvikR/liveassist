@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/SatvikR/liveassist/omnis"
-	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
@@ -62,7 +61,8 @@ func GenerateToken(tokenType TokenType, claims TokenClaims, key []byte) (string,
 func VerifyToken(signedString string, tokenType TokenType, key []byte) (TokenClaims, error) {
 	token, err := jwt.ParseWithClaims(
 		signedString,
-		(*TokenClaims)(nil),
+		// (*TokenClaims)(nil),
+		&TokenClaims{},
 		getKeyFunc(tokenType, key),
 	)
 	if err != nil {
@@ -86,15 +86,43 @@ func getKeyFunc(tokenType TokenType, key []byte) jwt.Keyfunc {
 	}
 }
 
-// SendRefreshToken sets a refresh token cookie
-func SendRefreshToken(c *gin.Context, refToken string) {
+// SetRefreshTokenCookie sets a refresh token cookie
+func SetRefreshTokenCookie(c *gin.Context, refToken string, domain string) {
 	c.SetCookie(
 		RefreshTokenCookie,
 		refToken,
 		int(RefreshTokenDuration),
 		omnis.RefreshRoute,
-		config.Domain,
+		domain,
 		false,
 		true,
 	)
+}
+
+func GenerateTokenPair(id int64, accessTokenKey, refreshTokenKey []byte) (string, string, error) {
+	accTok, err := GenerateToken(
+		AccessToken,
+		CreateClaims(
+			id,
+			AccessToken,
+			AccessTokenDuration,
+		),
+		accessTokenKey,
+	)
+	if err != nil {
+		return "", "", err
+	}
+	refTok, err := GenerateToken(
+		RefreshToken,
+		CreateClaims(
+			id,
+			RefreshToken,
+			RefreshTokenDuration,
+		),
+		refreshTokenKey,
+	)
+	if err != nil {
+		return "", "", err
+	}
+	return accTok, refTok, nil
 }

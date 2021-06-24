@@ -29,5 +29,5 @@ func Setup() {
 		log.Fatalf("Unable to setup database: %s", err.Error())
 	}
 
-	http.StartServer(config.PORT, []string{"http://localhost:3000"})
+	http.StartServer(config.Port, []string{"http://localhost:3000"})
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/SatvikR/liveassist/clavis"
 	"github.com/SatvikR/liveassist/omnis"
+	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/SatvikR/liveassist/populus/domain"
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +43,7 @@ func signup(c *gin.Context) {
 				"error": err.Error(),
 			})
 			return
-		case domain.ErrTokenGenFailed:
+		case omnis.ErrTokenGenFailed:
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
 			})
@@ -51,7 +52,7 @@ func signup(c *gin.Context) {
 		return
 	}
 
-	clavis.SendRefreshToken(c, refTok)
+	clavis.SetRefreshTokenCookie(c, refTok, config.Domain)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"accessToken": accTok,
@@ -80,7 +81,7 @@ func login(c *gin.Context) {
 				"error": err.Error(),
 			})
 			return
-		case domain.ErrTokenGenFailed:
+		case omnis.ErrTokenGenFailed:
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
 			})
@@ -94,13 +95,13 @@ func login(c *gin.Context) {
 		return
 	}
 
-	clavis.SendRefreshToken(c, refTok)
+	clavis.SetRefreshTokenCookie(c, refTok, config.Domain)
 	c.JSON(http.StatusAccepted, gin.H{
 		"accessToken": accTok,
 	})
 }
 
 func logout(c *gin.Context) {
-	clavis.SendRefreshToken(c, "")
+	clavis.SetRefreshTokenCookie(c, "", config.Domain)
 	c.Status(http.StatusOK)
 }

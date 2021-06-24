@@ -1,11 +1,16 @@
 // Copyright (c) 2021 Satvik Reddy
 package omnis
 
-import "errors"
+import (
+	"errors"
+	"log"
+	"strconv"
+)
 
 // Errors
 var (
-	ErrInvalidBody error = errors.New("invalid request body")
+	ErrInvalidBody    error = errors.New("invalid request body")
+	ErrTokenGenFailed error = errors.New("unable to generate tokens")
 )
 
 const (
@@ -13,3 +18,13 @@ const (
 	// is also the only route where we send refresh token cookies
 	RefreshRoute string = "/refresh"
 )
+
+func GetPort(portString string, defaultPort int) int {
+	p, err := strconv.Atoi(portString)
+	if err != nil {
+		log.Print("PORT environment variable not found, using default")
+		return defaultPort
+	} else {
+		return p
+	}
+}

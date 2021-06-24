@@ -1,3 +1,3 @@
 # Omnis
 
-Global constants and errors (not environment variables)
+Global utils, constants and errors (not environment variables)

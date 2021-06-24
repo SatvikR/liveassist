@@ -2,10 +2,9 @@
 package config
 
 import (
-	"log"
 	"os"
-	"strconv"
 
+	"github.com/SatvikR/liveassist/omnis"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -17,7 +16,7 @@ var (
 	AccessTokenKey  []byte
 	RefreshTokenKey []byte
 	Domain          string
-	PORT            int
+	Port            int
 )
 
 // LoadConfig loads configuratin data from environment.
@@ -29,15 +28,5 @@ func LoadConfig(defaultPort int) {
 	AccessTokenKey = []byte(os.Getenv("ACCESS_TOKEN_SECRET"))
 	RefreshTokenKey = []byte(os.Getenv("REFRESH_TOKEN_SECRET"))
 	Domain = os.Getenv("DOMAIN")
-	PORT = getPort(os.Getenv("PORT"), defaultPort)
-}
-
-func getPort(portString string, defaultPort int) int {
-	p, err := strconv.Atoi(portString)
-	if err != nil {
-		log.Print("PORT environment variable not found, using default")
-		return defaultPort
-	} else {
-		return p
-	}
+	Port = omnis.GetPort(os.Getenv("PORT"), defaultPort)
 }
