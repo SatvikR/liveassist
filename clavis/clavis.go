@@ -5,7 +5,10 @@ import (
 	"errors"
 	"time"
 
+	"github.com/SatvikR/liveassist/omnis"
+	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
 // TokenType is a specific type of token, eg. access or refresh
@@ -16,6 +19,14 @@ const (
 	AccessToken TokenType = "access"
 	// RefreshToken is used to refresh the access token
 	RefreshToken TokenType = "refresh"
+	// RefreshTokenCookie is the key for the refresh token cookie
+	RefreshTokenCookie string = "liveassist_rtok"
+)
+
+// Token duration
+const (
+	RefreshTokenDuration int64 = 7 * 24 * 60 * 60
+	AccessTokenDuration  int64 = 15
 )
 
 // TokenClaims is all the data encoded within a token
@@ -73,4 +84,17 @@ func getKeyFunc(tokenType TokenType, key []byte) jwt.Keyfunc {
 		}
 		return nil, errors.New("invalid claims")
 	}
+}
+
+// SendRefreshToken sets a refresh token cookie
+func SendRefreshToken(c *gin.Context, refToken string) {
+	c.SetCookie(
+		RefreshTokenCookie,
+		refToken,
+		int(RefreshTokenDuration),
+		omnis.RefreshRoute,
+		config.Domain,
+		false,
+		true,
+	)
 }

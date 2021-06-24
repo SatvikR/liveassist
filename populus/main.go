@@ -6,6 +6,7 @@ import (
 
 	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/SatvikR/liveassist/populus/db"
+	"github.com/SatvikR/liveassist/populus/delivery/http"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 // Setup will create any neccessary connections and variables needed to
 // start the service.
 func Setup() {
-	config.LoadConfig()
+	config.LoadConfig(8080)
 
 	db.Connect(
 		config.DBAddr,
@@ -27,4 +28,6 @@ func Setup() {
 	if err := db.Setup(); err != nil {
 		log.Fatalf("Unable to setup database: %s", err.Error())
 	}
+
+	http.StartServer(config.PORT, []string{"http://localhost:3000"})
 }
