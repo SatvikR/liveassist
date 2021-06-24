@@ -9,8 +9,7 @@
 ### API:
 
 ```sh
-docker-compose up -d
-# docker compose up -d on newer versions
+docker compose up -d
 ```
 
 ## LICENSE
