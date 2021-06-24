@@ -1,14 +1,16 @@
 // Copyright (c) 2021 Satvik Reddy
 package db
 
-// Creates a user and stores it in the database
+import "github.com/go-pg/pg/v10"
+
+// Creates a user and stores it in the database.
 func CreateUser(username string, hashedpw string, email string) (int64, error) {
 	tx, err := db.Begin()
 	if err != nil {
 		return 0, err
 	}
 
-	newUser := &user{
+	newUser := &User{
 		Username: username,
 		Password: hashedpw,
 		Email:    email,
@@ -22,4 +24,16 @@ func CreateUser(username string, hashedpw string, email string) (int64, error) {
 		return 0, err
 	}
 	return newUser.ID, nil
+}
+
+// FindUserByUsername looks for a user in the database and returns it if found.
+func FindUserByUsername(username string) (*User, error) {
+	user := new(User)
+	if err := db.Model(user).
+		Where("? = ?", pg.Ident("username"), username).
+		Select(); err != nil {
+		return (*User)(nil), err
+	}
+
+	return user, nil
 }

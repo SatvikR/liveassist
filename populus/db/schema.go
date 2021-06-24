@@ -7,7 +7,7 @@ import (
 	"github.com/go-pg/pg/v10/orm"
 )
 
-type user struct {
+type User struct {
 	ID        int64
 	Username  string `pg:",unique"`
 	Password  string
@@ -16,7 +16,7 @@ type user struct {
 }
 
 func loadSchema() error {
-	err := db.Model((*user)(nil)).CreateTable(&orm.CreateTableOptions{
+	err := db.Model((*User)(nil)).CreateTable(&orm.CreateTableOptions{
 		IfNotExists: true,
 	})
 	return err

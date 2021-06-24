@@ -22,9 +22,10 @@ func signup(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": omnis.ErrInvalidBody.Error(),
 		})
+		return
 	}
 
-	accTok, refToken, err := domain.Signup(
+	accTok, refTok, err := domain.Signup(
 		body.Username,
 		body.Password,
 		body.Email,
@@ -47,17 +48,56 @@ func signup(c *gin.Context) {
 			})
 			return
 		}
+		return
 	}
 
-	clavis.SendRefreshToken(c, refToken)
+	clavis.SendRefreshToken(c, refTok)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"accessToken": accTok,
 	})
 }
 
-func login(c *gin.Context) {
+type loginBody struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
+func login(c *gin.Context) {
+	var body loginBody
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": omnis.ErrInvalidBody.Error(),
+		})
+		return
+	}
+
+	accTok, refTok, err := domain.Login(body.Username, body.Password)
+	if err != nil {
+		switch err {
+		case domain.ErrWrongPassword:
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": err.Error(),
+			})
+			return
+		case domain.ErrTokenGenFailed:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		case domain.ErrUserNotFound:
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		return
+	}
+
+	clavis.SendRefreshToken(c, refTok)
+	c.JSON(http.StatusAccepted, gin.H{
+		"accessToken": accTok,
+	})
 }
 
 func logout(c *gin.Context) {
