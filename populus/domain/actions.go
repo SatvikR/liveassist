@@ -87,7 +87,3 @@ func generateTokens(id int64) (string, string, error) {
 	}
 	return accTok, refTok, nil
 }
-
-func Logout() {
-
-}

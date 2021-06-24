@@ -101,5 +101,6 @@ func login(c *gin.Context) {
 }
 
 func logout(c *gin.Context) {
-
+	clavis.SendRefreshToken(c, "")
+	c.Status(http.StatusOK)
 }
