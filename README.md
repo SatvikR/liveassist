@@ -11,6 +11,7 @@
 | clavis    | JWT Token utils                         |
 | omnis     | Global errors, constants, and functions |
 | populus   | User service                            |
+| amnis     | Channel service                         |
 | verum     | Auth server                             |
 | docker    | docker images and config files          |
 
@@ -31,7 +32,7 @@ MIT
 - [x] JWT functions
 - [x] Populus business logic
 - [x] Populus routes
-- [ ] Channel models
+- [x] Channel models
 - [ ] RabbitMQ
 - [ ] AMPQ functions to consume and produce
 - [x] Dockerfile's and docker-compose file for development
