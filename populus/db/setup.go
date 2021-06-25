@@ -2,33 +2,20 @@
 package db
 
 import (
-	"context"
 	"log"
 
+	"github.com/SatvikR/liveassist/omnis/dbutil"
+	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/go-pg/pg/v10"
 )
 
 var db *pg.DB
 
-// Connect creates a go-pg connection.
-func Connect(addr string, user string, password string, name string) {
-	db = pg.Connect(&pg.Options{
-		Addr:     addr,
-		User:     user,
-		Password: password,
-		Database: name,
-	})
-}
-
-// Close will disconnect from the database
-func Close() error {
-	return db.Close()
-}
-
 // Setup will create schemas
 func Setup() error {
-	// return loadSchema()
-	if err := Healthcheck(); err != nil {
+	dbutil.Connect(&db, config.DBAddr, config.DBUser, config.DBPassword, config.DBName)
+
+	if err := dbutil.Healthcheck(db); err != nil {
 		return err
 	}
 	log.Println("Connected to database")
@@ -40,8 +27,7 @@ func Setup() error {
 	return nil
 }
 
-// Healthcheck pings the database to make sure it is connected properly.
-func Healthcheck() error {
-	err := db.Ping(context.Background())
-	return err
+// Close will close the database
+func Close() error {
+	return db.Close()
 }

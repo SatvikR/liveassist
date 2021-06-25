@@ -18,16 +18,10 @@ func main() {
 func Setup() {
 	config.LoadConfig(8080)
 
-	db.Connect(
-		config.DBAddr,
-		config.DBUser,
-		config.DBPassword,
-		config.DBName,
-	)
-	defer db.Close()
 	if err := db.Setup(); err != nil {
 		log.Fatalf("Unable to setup database: %s", err.Error())
 	}
+	defer db.Close()
 
 	http.StartServer(config.Port)
 }
