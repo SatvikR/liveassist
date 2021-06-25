@@ -4,6 +4,7 @@ package http
 import (
 	"fmt"
 
+	"github.com/SatvikR/liveassist/omnis"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -19,14 +20,7 @@ func StartServer(port int) {
 	g.POST("/login", login)
 	g.DELETE("/logout", logout)
 
-	var origins []string
-
-	if gin.Mode() == gin.ReleaseMode {
-		// TODO change this url to the prod url
-		origins = []string{"http://localhost:3000"}
-	} else {
-		origins = []string{"http://localhost:3000"}
-	}
+	origins := omnis.GetDomain()
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = origins

@@ -4,18 +4,21 @@ package http
 import (
 	"fmt"
 
+	"github.com/SatvikR/liveassist/omnis"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 // StartServer will start an http server. Routes are:
 // PUT /refresh
-func StartServer(port int, origins []string) {
+func StartServer(port int) {
 	r := gin.Default()
 
 	g := r.Group("/api/tokens")
 
 	g.PUT("/refresh", refresh)
+
+	origins := omnis.GetDomain()
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = origins

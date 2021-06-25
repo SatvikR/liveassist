@@ -9,5 +9,5 @@ import (
 func main() {
 	config.LoadConfig(8081)
 
-	http.StartServer(config.Port, []string{"http://localhost:3000"})
+	http.StartServer(config.Port)
 }

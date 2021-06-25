@@ -5,6 +5,8 @@ import (
 	"errors"
 	"log"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Errors
@@ -27,4 +29,15 @@ func GetPort(portString string, defaultPort int) int {
 	} else {
 		return p
 	}
+}
+
+func GetDomain() []string {
+	var origins []string
+	if gin.Mode() == gin.ReleaseMode {
+		// TODO change this url to the prod url
+		origins = []string{"http://localhost:3000"}
+	} else {
+		origins = []string{"http://localhost:3000"}
+	}
+	return origins
 }
