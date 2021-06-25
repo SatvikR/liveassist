@@ -36,7 +36,7 @@ MIT
 - [ ] AMPQ functions to consume and produce
 - [x] Dockerfile's and docker-compose file for development
 - [ ] Selective data replication for users
-- [ ] Clavis auth middleware
+- [x] Clavis auth middleware
 - [x] Auth server
 - [ ] Channel business logic
 - [ ] Channel routes

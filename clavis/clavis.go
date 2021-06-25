@@ -3,6 +3,8 @@ package clavis
 
 import (
 	"errors"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/SatvikR/liveassist/omnis"
@@ -99,6 +101,7 @@ func SetRefreshTokenCookie(c *gin.Context, refToken string, domain string) {
 	)
 }
 
+// GenerateTokenPair generates an accessToken and a refresh token from a user id
 func GenerateTokenPair(id int64, accessTokenKey, refreshTokenKey []byte) (string, string, error) {
 	accTok, err := GenerateToken(
 		AccessToken,
@@ -125,4 +128,48 @@ func GenerateTokenPair(id int64, accessTokenKey, refreshTokenKey []byte) (string
 		return "", "", err
 	}
 	return accTok, refTok, nil
+}
+
+type bearerHeader struct {
+	Authorization string `header:"Authorization"`
+}
+
+// JWTAuthMiddleware returns a bearer token based middleware
+func JWTAuthMiddleware(accessKey []byte) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var header bearerHeader
+		if err := c.ShouldBindHeader(&header); err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "no authorization header",
+			})
+			return
+		}
+
+		var signedToken string
+		if bearer := strings.Split(header.Authorization, " "); len(bearer) == 2 {
+			signedToken = bearer[1]
+		} else {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid authorization header",
+			})
+			return
+		}
+
+		claims, err := VerifyToken(signedToken, AccessToken, accessKey)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid token",
+			})
+			return
+		}
+		if claims.Type != AccessToken {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid token",
+			})
+			return
+		}
+
+		c.Set("claims", &claims)
+		c.Next()
+	}
 }
