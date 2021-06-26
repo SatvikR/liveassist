@@ -169,7 +169,7 @@ func JWTAuthMiddleware(accessKey []byte) gin.HandlerFunc {
 			return
 		}
 
-		c.Set("claims", &claims)
+		c.Set("uid", claims.ID)
 		c.Next()
 	}
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/SatvikR/liveassist/amnis/config"
 	"github.com/SatvikR/liveassist/amnis/db"
+	"github.com/SatvikR/liveassist/amnis/deliver/http"
 )
 
 func main() {
@@ -15,4 +16,6 @@ func main() {
 		log.Fatalf("Unable to setup database: %s", err.Error())
 	}
 	defer db.Close()
+
+	http.StartServer(config.Port)
 }

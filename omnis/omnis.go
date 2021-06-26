@@ -13,6 +13,7 @@ import (
 var (
 	ErrInvalidBody    error = errors.New("invalid request body")
 	ErrTokenGenFailed error = errors.New("unable to generate tokens")
+	ErrCouldNotCreate error = errors.New("unable to create object")
 )
 
 const (
