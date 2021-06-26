@@ -85,5 +85,12 @@ func channel(c *gin.Context) {
 }
 
 func channels(c *gin.Context) {
-
+	channels, err := domain.GetChannels()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "could not fetch channels",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, channels)
 }

@@ -56,25 +56,33 @@ func Delete(id string) error {
 
 // GetChannel gives back a single channel's data
 func GetChannel(id string) (Channel, error) {
-	_c, err := db.FindChannel(id)
+	c, err := db.FindChannel(id)
 	if err != nil {
 		return Channel{}, ErrChannelDoesNotExist
 	}
-	c := Channel{
-		ID:       _c.ID,
-		OwnerID:  _c.OwnerID,
-		Name:     _c.Name,
-		Keywords: strings.Split(_c.Keywords, " "),
-	}
-	return c, nil
+	return constructChannel(c), nil
 }
 
 // GetChannels returns all of the channels
 // TODO pagination
-func GetChannels() ([]*db.Channel, error) {
+func GetChannels() ([]Channel, error) {
 	c, err := db.FindAllChannels()
 	if err != nil {
 		return nil, ErrCannotFindChannels
 	}
-	return c, nil
+
+	out := make([]Channel, len(c))
+	for i, ch := range c {
+		out[i] = constructChannel(ch)
+	}
+	return out, nil
+}
+
+func constructChannel(c *db.Channel) Channel {
+	return Channel{
+		ID:       c.ID,
+		Name:     c.Name,
+		OwnerID:  c.OwnerID,
+		Keywords: strings.Split(c.Keywords, " "),
+	}
 }
