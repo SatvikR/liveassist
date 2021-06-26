@@ -39,5 +39,6 @@ MIT
 - [ ] Selective data replication for users
 - [x] Clavis auth middleware
 - [x] Auth server
-- [ ] Channel business logic
-- [ ] Channel routes
+- [x] Channel business logic
+- [x] Channel routes
+- [ ] Channel pagination
