@@ -27,7 +27,7 @@ const (
 // Token duration
 const (
 	RefreshTokenDuration int64 = 7 * 24 * 60 * 60
-	AccessTokenDuration  int64 = 15
+	AccessTokenDuration  int64 = 60 * 60
 )
 
 // TokenClaims is all the data encoded within a token
