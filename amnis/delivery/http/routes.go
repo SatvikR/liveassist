@@ -63,7 +63,7 @@ func delete(c *gin.Context) {
 	id := c.Param("id")
 	err := domain.Delete(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"error": "could not delete channel",
 		})
 		return
@@ -72,7 +72,16 @@ func delete(c *gin.Context) {
 }
 
 func channel(c *gin.Context) {
+	id := c.Param("id")
+	channel, err := domain.GetChannel(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "could not find channel",
+		})
+		return
+	}
 
+	c.JSON(http.StatusOK, channel)
 }
 
 func channels(c *gin.Context) {

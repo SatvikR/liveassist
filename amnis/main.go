@@ -6,7 +6,7 @@ import (
 
 	"github.com/SatvikR/liveassist/amnis/config"
 	"github.com/SatvikR/liveassist/amnis/db"
-	"github.com/SatvikR/liveassist/amnis/deliver/http"
+	"github.com/SatvikR/liveassist/amnis/delivery/http"
 )
 
 func main() {
