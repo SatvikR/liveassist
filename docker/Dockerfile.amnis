@@ -1,0 +1,19 @@
+FROM golang:1.16.5 as build
+
+WORKDIR /usr/src
+
+COPY ./go.mod ./go.sum ./
+COPY ./clavis ./clavis
+COPY ./omnis ./omnis
+COPY ./amnis ./amnis
+ENV GO111MODULE=on
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./bin/amnis ./amnis
+
+FROM alpine:latest
+
+WORKDIR /app
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+
+COPY --from=build /usr/src/bin/amnis .
+EXPOSE 8082
+CMD ./amnis

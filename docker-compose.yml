@@ -4,30 +4,71 @@ version: '3'
 
 services:
   populus:
-    build: ./docker/Dockerfile.populus
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.populus
     environment:
-      - DB_ADDR=postgres:5432
+      - DB_ADDR=postgres_populus:5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_NAME=liveassist
+      - DB_NAME=liveassist_populus
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
       - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
       - DOMAIN=localhost
+      - PORT=8080
+    expose:
+      - 8080
     depends_on:
-      postgres:
+      postgres_populus:
+        condition: service_healthy
+  amnis:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.amnis
+    environment:
+      - DB_ADDR=postgres_amnis:5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=liveassist_amnis
+      - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
+      - PORT=8080
+    expose:
+      - 8080
+    depends_on:
+      postgres_amnis:
         condition: service_healthy
   verum:
-    build: ./docker/Dockerfile.verum
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.verum
     environment:
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
       - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
       - DOMAIN=localhost
-  postgres:
+      - PORT=8080
+    expose:
+      - 8080
+  postgres_populus:
     image: postgres
+    volumes:
+      - populus_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=liveassist
+      - POSTGRES_DB=liveassist_populus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  postgres_amnis:
+    image: postgres
+    volumes:
+      - amnis_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=liveassist_amnis
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -42,3 +83,8 @@ services:
     depends_on:
       - populus
       - verum
+      - amnis
+
+volumes:
+  populus_data:
+  amnis_data:
