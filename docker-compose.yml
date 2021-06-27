@@ -15,11 +15,14 @@ services:
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
       - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
       - DOMAIN=localhost
+      - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
       - PORT=8080
     expose:
       - 8080
     depends_on:
       postgres_populus:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
   amnis:
     build:
@@ -31,11 +34,14 @@ services:
       - DB_PASSWORD=postgres
       - DB_NAME=liveassist_amnis
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
+      - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
       - PORT=8080
     expose:
       - 8080
     depends_on:
       postgres_amnis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
   verum:
     build:
@@ -74,6 +80,19 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  rabbitmq:
+    image: rabbitmq
+    volumes:
+      - mqdata:/var/lib/rabbitmq
+      - mqlogs:/var/log/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=lassist
+      - RABBITMQ_DEFAULT_PASS=lassist
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   nginx:
     image: nginx
     volumes:
@@ -88,3 +107,5 @@ services:
 volumes:
   populus_data:
   amnis_data:
+  mqdata:
+  mqlogs:
