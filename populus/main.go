@@ -7,6 +7,7 @@ import (
 	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/SatvikR/liveassist/populus/db"
 	"github.com/SatvikR/liveassist/populus/delivery/http"
+	"github.com/SatvikR/liveassist/populus/messaging"
 )
 
 func main() {
@@ -22,6 +23,11 @@ func Setup() {
 		log.Fatalf("Unable to setup database: %s", err.Error())
 	}
 	defer db.Close()
+
+	if err := messaging.Setup(); err != nil {
+		log.Fatalf("Unable to counnect to rabbitmq: %s", err.Error())
+	}
+	defer messaging.Close()
 
 	http.StartServer(config.Port)
 }

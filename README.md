@@ -36,9 +36,10 @@ MIT
 - [ ] RabbitMQ
 - [ ] AMPQ functions to consume and produce
 - [x] Dockerfile's and docker-compose file for development
-- [ ] Selective data replication for users
+- [x] Selective data replication for users
 - [x] Clavis auth middleware
 - [x] Auth server
 - [x] Channel business logic
 - [x] Channel routes
 - [ ] Channel pagination
+- [ ] RabbitMQ fanout exchange

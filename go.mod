@@ -9,4 +9,5 @@ require (
 	github.com/go-pg/pg/v10 v10.10.0
 	github.com/joho/godotenv v1.3.0
 	github.com/matthewhartstonge/argon2 v0.1.4
+	github.com/streadway/amqp v1.0.0
 )

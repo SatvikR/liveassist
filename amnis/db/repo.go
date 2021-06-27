@@ -50,7 +50,8 @@ func DeleteChannel(id string) error {
 func FindChannel(id string) (*Channel, error) {
 	channel := new(Channel)
 	err := db.Model(channel).
-		Where("? = ?", pg.Ident("id"), id).
+		Relation("Owner").
+		Where("? = ?", pg.Ident("channel.id"), id).
 		Select()
 	if err != nil {
 		return nil, err
@@ -63,10 +64,33 @@ func FindAllChannels() ([]*Channel, error) {
 	var channels []*Channel
 	// TODO pagination
 	err := db.Model(&channels).
+		Relation("Owner").
 		Select()
 	if err != nil {
 		return nil, err
 	}
 
 	return channels, nil
+}
+
+// SaveUser takes user data replicated from populus and saves it
+func SaveUser(id int, username string) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	newUser := &User{
+		ID:       id,
+		Username: username,
+	}
+
+	if _, err := tx.Model(newUser).Insert(); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/SatvikR/liveassist/omnis"
 	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/SatvikR/liveassist/populus/db"
+	"github.com/SatvikR/liveassist/populus/messaging"
 )
 
 // Errors that the functions can return
@@ -26,7 +27,7 @@ func Signup(username string, password string, email string) (string, string, err
 	if err != nil {
 		return "", "", ErrHashFailed
 	}
-	id, err := db.CreateUser(username, hashedpw, email)
+	id, username, err := db.CreateUser(username, hashedpw, email)
 	if err != nil {
 		return "", "", ErrUserExists
 	}
@@ -35,6 +36,8 @@ func Signup(username string, password string, email string) (string, string, err
 	if err != nil {
 		return "", "", omnis.ErrTokenGenFailed
 	}
+
+	messaging.DispatchUserData(int(id), username)
 
 	return accTok, refTok, nil
 }

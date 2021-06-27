@@ -14,11 +14,16 @@ var (
 	ErrCannotFindChannels  error = errors.New("cannot fetch channels")
 )
 
+type Owner struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+}
+
 type Channel struct {
 	ID       string   `json:"id"`
-	OwnerID  int      `json:"ownerId"`
 	Name     string   `json:"name"`
 	Keywords []string `json:"keywords"`
+	Owner    Owner    `json:"owner"`
 }
 
 // Create creates a channel and gives back the id
@@ -52,8 +57,6 @@ func Delete(id string) error {
 	return nil
 }
 
-// TODO fix users embedding
-
 // GetChannel gives back a single channel's data
 func GetChannel(id string) (Channel, error) {
 	c, err := db.FindChannel(id)
@@ -82,7 +85,10 @@ func constructChannel(c *db.Channel) Channel {
 	return Channel{
 		ID:       c.ID,
 		Name:     c.Name,
-		OwnerID:  c.OwnerID,
 		Keywords: strings.Split(c.Keywords, " "),
+		Owner: Owner{
+			ID:       c.Owner.ID,
+			Username: c.Owner.Username,
+		},
 	}
 }

@@ -16,6 +16,7 @@ var (
 	AccessTokenKey  []byte
 	RefreshTokenKey []byte
 	Domain          string
+	MQUrl           string
 	Port            int
 )
 
@@ -28,5 +29,6 @@ func LoadConfig(defaultPort int) {
 	AccessTokenKey = []byte(os.Getenv("ACCESS_TOKEN_SECRET"))
 	RefreshTokenKey = []byte(os.Getenv("REFRESH_TOKEN_SECRET"))
 	Domain = os.Getenv("DOMAIN")
+	MQUrl = os.Getenv("MQ_URL")
 	Port = omnis.GetPort(os.Getenv("PORT"), defaultPort)
 }

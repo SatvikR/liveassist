@@ -4,10 +4,10 @@ package db
 import "github.com/go-pg/pg/v10"
 
 // Creates a user and stores it in the database.
-func CreateUser(username string, hashedpw string, email string) (int64, error) {
+func CreateUser(username string, hashedpw string, email string) (int64, string, error) {
 	tx, err := db.Begin()
 	if err != nil {
-		return 0, err
+		return 0, "", err
 	}
 
 	newUser := &User{
@@ -17,13 +17,13 @@ func CreateUser(username string, hashedpw string, email string) (int64, error) {
 	}
 	if _, err := tx.Model(newUser).Insert(); err != nil {
 		tx.Rollback()
-		return 0, err
+		return 0, "", err
 	}
 
 	if err := tx.Commit(); err != nil {
-		return 0, err
+		return 0, "", err
 	}
-	return newUser.ID, nil
+	return newUser.ID, newUser.Username, nil
 }
 
 // FindUserByUsername looks for a user in the database and returns it if found.
