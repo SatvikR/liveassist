@@ -29,7 +29,7 @@ type UserMessage struct {
 // Connect connects to the amql address, and returns a connection and a channel.
 // Make sure to defer closing both of those.
 func Connect(addr string) (*amqp.Connection, *amqp.Channel, error) {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672")
+	conn, err := amqp.Dial(addr)
 	if err != nil {
 		return nil, nil, err
 	}
