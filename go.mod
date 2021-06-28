@@ -10,4 +10,5 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/matthewhartstonge/argon2 v0.1.4
 	github.com/streadway/amqp v1.0.0
+	go.mongodb.org/mongo-driver v1.5.3 // indirect
 )

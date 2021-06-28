@@ -28,7 +28,6 @@ type Channel struct {
 
 // Create creates a channel and gives back the id
 func Create(name string, ownerID int, keywords []string) (string, error) {
-	// TODO make sure user exists
 	// Convert keywords into a single string
 	var kwstr strings.Builder
 	for i, kw := range keywords {
