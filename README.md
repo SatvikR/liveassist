@@ -13,6 +13,7 @@
 | populus   | User service                            |
 | amnis     | Channel service                         |
 | verum     | Auth server                             |
+| nuntius   | Message service                         |
 | docker    | docker images and config files          |
 
 ## Run locally
