@@ -11,6 +11,7 @@ import (
 var (
 	DBName         string
 	DBUri          string
+	MQUrl          string
 	AccessTokenKey []byte
 	Port           int
 )
@@ -21,4 +22,5 @@ func LoadConfig(defaultPort int) {
 	DBUri = os.Getenv("DB_URI")
 	AccessTokenKey = []byte(os.Getenv("ACCESS_TOKEN_SECRET"))
 	Port = omnis.GetPort(os.Getenv("PORT"), defaultPort)
+	MQUrl = os.Getenv("MQ_URL")
 }

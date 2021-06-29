@@ -20,6 +20,11 @@ type Message struct {
 	ChannelID string `bson:"channelId" json:"channelId"`
 }
 
+type User struct {
+	Uid      int    `bson:"uid" json:"id,omitempty"`
+	Username string `bson:"username" json:"username"`
+}
+
 // CreateMessage stores a message in the database
 func CreateMessage(text string, chanId string, userId int) (string, error) {
 	newMessage := bson.D{
@@ -63,4 +68,18 @@ func FindInChannel(chanId string) ([]Message, error) {
 		return nil, err
 	}
 	return messages, nil
+}
+
+// SaveUser saves replicated user data
+func SaveUser(username string, uid int) error {
+	newUser := bson.D{
+		{Key: "uid", Value: uid},
+		{Key: "username", Value: username},
+	}
+
+	_, err := users.InsertOne(
+		context.Background(),
+		newUser,
+	)
+	return err
 }

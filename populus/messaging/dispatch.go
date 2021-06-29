@@ -20,8 +20,8 @@ func DispatchUserData(id int, username string) error {
 	}
 
 	err = ch.Publish(
+		exchange,
 		"",
-		amnisq.Name,
 		false,
 		false,
 		amqp.Publishing{

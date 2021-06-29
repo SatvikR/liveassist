@@ -43,7 +43,7 @@ MIT
 - [x] Channel business logic
 - [x] Channel routes
 - [ ] Channel pagination
-- [ ] RabbitMQ fanout exchange
-- [ ] Replicate user data on nuntius
+- [x] RabbitMQ fanout exchange
+- [x] Replicate user data on nuntius
 - [ ] Replicate channel data on nuntius
 - [ ] Retry postgres connections for amnis and populus

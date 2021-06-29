@@ -4,7 +4,7 @@ package messaging
 import (
 	"log"
 
-	"github.com/SatvikR/liveassist/amnis/config"
+	"github.com/SatvikR/liveassist/nuntius/config"
 	"github.com/SatvikR/liveassist/omnis/mq"
 	"github.com/streadway/amqp"
 )
@@ -24,6 +24,9 @@ func Setup() error {
 	log.Println("Connected to rabbit mq")
 	conn = _conn
 	ch = _ch
+	if err != nil {
+		return err
+	}
 	_queue, err := mq.GetNonDurableQueue(ch)
 	if err != nil {
 		return err
@@ -32,7 +35,6 @@ func Setup() error {
 	if err := mq.BindQueue(queue.Name, mq.PopulusExchange, ch); err != nil {
 		return err
 	}
-	log.Println("Created amnis queue")
 	err = listen()
 	if err != nil {
 		return err

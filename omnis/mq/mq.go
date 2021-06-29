@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	AmnisQName string = "amnis"
+	AmnisQName      string = "amnis"
+	PopulusExchange string = "populus"
 )
 
 // populus events
@@ -47,6 +48,45 @@ func GetQueue(name string, ch *amqp.Channel) (amqp.Queue, error) {
 		true,
 		false,
 		false,
+		false,
+		nil,
+	)
+}
+
+func GetNonDurableQueue(ch *amqp.Channel) (amqp.Queue, error) {
+	return ch.QueueDeclare(
+		"",
+		false,
+		false,
+		true,
+		false,
+		nil,
+	)
+}
+
+// GetFanoutExchange creates a fanout exchange with the given name and returns the name
+func GetFanoutExchange(name string, ch *amqp.Channel) (string, error) {
+	err := ch.ExchangeDeclare(
+		name,
+		"fanout",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return "", err
+	}
+	return name, nil
+}
+
+// BindQueue binds a queue to an exchange
+func BindQueue(qName, exchange string, ch *amqp.Channel) error {
+	return ch.QueueBind(
+		qName,
+		"",
+		exchange,
 		false,
 		nil,
 	)

@@ -16,10 +16,12 @@ import (
 var (
 	client   *mongo.Client
 	messages *mongo.Collection
+	users    *mongo.Collection
 )
 
 const (
 	messagesCollection string = "messages"
+	usersCollection    string = "users"
 )
 
 // Setup will connect to the mongodb database and setup everything.
@@ -47,9 +49,10 @@ func Setup() error {
 	}
 	// Setup Collections
 	messages = client.Database(cs.Database).Collection(messagesCollection)
+	users = client.Database(cs.Database).Collection(usersCollection)
 
 	// Indexes
-	name, err := messages.Indexes().CreateOne(
+	_, err = messages.Indexes().CreateOne(
 		ctx,
 		mongo.IndexModel{
 			Keys: bson.D{
@@ -61,7 +64,17 @@ func Setup() error {
 	if err != nil {
 		return err
 	}
-	log.Printf("Created index %s", name)
+	_, err = users.Indexes().CreateOne(
+		ctx,
+		mongo.IndexModel{
+			Keys: bson.D{
+				{Key: "uid", Value: 1},
+			},
+		},
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

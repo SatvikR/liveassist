@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/SatvikR/liveassist/amnis/db"
+	"github.com/SatvikR/liveassist/nuntius/db"
 	"github.com/SatvikR/liveassist/omnis/mq"
 )
 
@@ -34,18 +34,13 @@ func listen() error {
 			go handleMsg(data)
 		}
 	}()
-
 	return nil
 }
 
 func handleMsg(data mq.UserMessage) error {
 	switch data.Event {
 	case mq.UserCreated:
-		err := db.SaveUser(data.ID, data.Username)
-		if err != nil {
-			log.Printf("Unable to save user data: %s", err.Error())
-		}
-		return err
+		return db.SaveUser(data.Username, data.ID)
 	default:
 		return mq.ErrInvalidEvent
 	}

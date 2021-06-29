@@ -51,6 +51,7 @@ services:
       - DB_URI=mongodb://mongodb_nuntius:27017/liveassist_nuntius
       - DB_NAME=liveassist_nuntius
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
+      - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
       - PORT=8080
     expose:
       - 8080

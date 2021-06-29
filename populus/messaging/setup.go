@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	conn   *amqp.Connection
-	ch     *amqp.Channel
-	amnisq amqp.Queue
+	conn     *amqp.Connection
+	ch       *amqp.Channel
+	exchange string
 )
 
 // Setup initializes the rabbit mq connection
@@ -24,11 +24,11 @@ func Setup() error {
 	log.Println("Connected to rabbit mq")
 	conn = _conn
 	ch = _ch
-	amnisq, err = mq.GetQueue(mq.AmnisQName, ch)
+	_exchange, err := mq.GetFanoutExchange(mq.PopulusExchange, ch)
 	if err != nil {
 		return err
 	}
-	log.Println("Created amnis queue")
+	exchange = _exchange
 	return nil
 }
 
