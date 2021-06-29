@@ -34,8 +34,8 @@ MIT
 - [x] Populus business logic
 - [x] Populus routes
 - [x] Channel models
-- [ ] RabbitMQ
-- [ ] AMPQ functions to consume and produce
+- [x] RabbitMQ
+- [x] AMPQ functions to consume and produce
 - [x] Dockerfile's and docker-compose file for development
 - [x] Selective data replication for users
 - [x] Clavis auth middleware
