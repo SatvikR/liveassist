@@ -15,9 +15,8 @@ type Message struct {
 	ID        primitive.ObjectID `bson:"_id" json:"id,omitempty"`
 	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
 	Text      string             `bson:"text" json:"text"`
-	// TODO change userId to replicated user data
-	UserID    int    `bson:"userId" json:"userId"`
-	ChannelID string `bson:"channelId" json:"channelId"`
+	User      User               `bson:"user" json:"owner"`
+	ChannelID string             `bson:"channelId" json:"channelId"`
 }
 
 type User struct {
@@ -27,11 +26,20 @@ type User struct {
 
 // CreateMessage stores a message in the database
 func CreateMessage(text string, chanId string, userId int) (string, error) {
+	user, err := GetUser(userId)
+	if err != nil {
+		return "", err
+	}
+
 	newMessage := bson.D{
 		{Key: "text", Value: text},
 		{Key: "channelId", Value: chanId},
 		{Key: "createdAt", Value: time.Now()},
-		{Key: "userId", Value: userId},
+		// {Key: "userId", Value: userId},
+		{Key: "user", Value: bson.D{
+			{Key: "uid", Value: user.Uid},
+			{Key: "username", Value: user.Username},
+		}},
 	}
 	_id, err := messages.InsertOne(
 		context.Background(),
@@ -82,4 +90,19 @@ func SaveUser(username string, uid int) error {
 		newUser,
 	)
 	return err
+}
+
+// GetUser finds a user and returns the user info
+func GetUser(uid int) (User, error) {
+	queryFilter := bson.D{{Key: "uid", Value: uid}}
+	res := users.FindOne(
+		context.Background(),
+		queryFilter,
+	)
+	var user User
+	err := res.Decode(&user)
+	if err != nil {
+		return User{}, err
+	}
+	return user, err
 }
