@@ -17,7 +17,7 @@ func StartServer(port int) {
 	go hub.start()
 	r := gin.Default()
 	a := r.Use(clavis.JWTAuthMiddleware(config.AccessTokenKey))
-	a.GET("/ws", func(c *gin.Context) {
+	a.GET("/messages/ws", func(c *gin.Context) {
 		// TODO make sure channel exists
 		chanId := c.Query("channel")
 		if chanId != "" {
