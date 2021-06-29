@@ -43,6 +43,22 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+  nuntius:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.nuntius
+    environment:
+      - DB_URI=mongodb://mongodb_nuntius:27017/liveassist_nuntius
+      - DB_NAME=liveassist_nuntius
+      - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
+      - PORT=8080
+    expose:
+      - 8080
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongodb_nuntius:
+        condition: service_started
   verum:
     build:
       context: .
@@ -93,6 +109,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  mongodb_nuntius:
+    image: mongo
+    volumes:
+      - nuntius_data:/data/db
   nginx:
     image: nginx
     volumes:
@@ -107,5 +127,6 @@ services:
 volumes:
   populus_data:
   amnis_data:
+  nuntius_data:
   mqdata:
   mqlogs:
