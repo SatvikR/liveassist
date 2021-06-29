@@ -44,3 +44,5 @@ MIT
 - [x] Channel routes
 - [ ] Channel pagination
 - [ ] RabbitMQ fanout exchange
+- [ ] Replicate user data on nuntius
+- [ ] Replicate channel data on nuntius

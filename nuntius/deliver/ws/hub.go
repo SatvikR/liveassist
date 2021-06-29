@@ -2,9 +2,11 @@
 package ws
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/SatvikR/liveassist/nuntius/domain"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -14,8 +16,13 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+type messageBody struct {
+	Text string `json:"text"`
+}
+
 type message struct {
-	data []byte
+	data   []byte
+	chanId string
 }
 
 type client struct {
@@ -23,6 +30,7 @@ type client struct {
 	send   chan *message
 	hub    *hub
 	conn   *websocket.Conn
+	userId int
 }
 
 type channel struct {
@@ -51,13 +59,34 @@ func newChannel() *channel {
 	}
 }
 
-func newClient(chanId string, hub *hub, conn *websocket.Conn) *client {
+func newClient(chanId string, hub *hub, conn *websocket.Conn, userId int) *client {
 	return &client{
 		chanId: chanId,
 		send:   make(chan *message),
 		hub:    hub,
 		conn:   conn,
+		userId: userId,
 	}
+}
+
+func newMessage(text, chanId string, userId int) (*message, error) {
+	type messageData struct {
+		UserId int    `json:"userId"`
+		Text   string `json:"text"`
+	}
+
+	data, err := json.Marshal(&messageData{
+		UserId: userId,
+		Text:   text,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &message{
+		data:   data,
+		chanId: chanId,
+	}, nil
 }
 
 func (h *hub) start() {
@@ -79,6 +108,15 @@ func (h *hub) start() {
 			if len(h.channels[client.chanId].clients) < 1 {
 				delete(h.channels, client.chanId)
 			}
+		case message := <-h.broadcast:
+			// Check if the channel is on this hub
+			if _, ok := h.channels[message.chanId]; !ok {
+				break
+			}
+			// Send the message to each of the clients in the channel
+			for client := range h.channels[message.chanId].clients {
+				client.send <- message
+			}
 		}
 	}
 }
@@ -93,15 +131,39 @@ func (c *client) readPump() {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				break
+			}
+		}
+		var messageData messageBody
+		if err = json.Unmarshal(message, &messageData); err == nil {
+			if err := domain.SaveMessage(messageData.Text, c.chanId, c.userId); err != nil {
 				log.Printf("error: %v", err)
 			}
-			break
+			if pmessage, err := newMessage(messageData.Text, c.chanId, c.userId); err == nil {
+				c.hub.broadcast <- pmessage
+			}
 		}
-		log.Printf("Recieved message: %s", string(message))
 	}
 }
 
-func serveWs(hub *hub, w http.ResponseWriter, r *http.Request, chanId string) {
+func (c *client) writePump() {
+	defer func() {
+		c.conn.Close()
+	}()
+
+	for message := range c.send {
+		w, err := c.conn.NextWriter(websocket.TextMessage)
+		if err != nil {
+			return
+		}
+		w.Write(message.data)
+		if err := w.Close(); err != nil {
+			return
+		}
+	}
+}
+
+func serveWs(hub *hub, w http.ResponseWriter, r *http.Request, chanId string, userId int) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		if gin.Mode() == gin.DebugMode {
@@ -110,8 +172,9 @@ func serveWs(hub *hub, w http.ResponseWriter, r *http.Request, chanId string) {
 		return
 	}
 
-	client := newClient(chanId, hub, conn)
+	client := newClient(chanId, hub, conn, userId)
 	client.hub.register <- client
 
 	go client.readPump()
+	go client.writePump()
 }

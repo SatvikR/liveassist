@@ -15,15 +15,18 @@ type Message struct {
 	ID        primitive.ObjectID `bson:"_id" json:"id,omitempty"`
 	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
 	Text      string             `bson:"text" json:"text"`
-	ChannelID string             `bson:"channelId" json:"channelId"`
+	// TODO change userId to replicated user data
+	UserID    int    `bson:"userId" json:"userId"`
+	ChannelID string `bson:"channelId" json:"channelId"`
 }
 
 // CreateMessage stores a message in the database
-func CreateMessage(text string, chanId string) (string, error) {
+func CreateMessage(text string, chanId string, userId int) (string, error) {
 	newMessage := bson.D{
 		{Key: "text", Value: text},
 		{Key: "channelId", Value: chanId},
 		{Key: "createdAt", Value: time.Now()},
+		{Key: "userId", Value: userId},
 	}
 	_id, err := messages.InsertOne(
 		context.Background(),
