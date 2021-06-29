@@ -6,6 +6,7 @@ import (
 
 	"github.com/SatvikR/liveassist/nuntius/config"
 	"github.com/SatvikR/liveassist/nuntius/db"
+	"github.com/SatvikR/liveassist/nuntius/deliver/ws"
 )
 
 func main() {
@@ -16,4 +17,6 @@ func main() {
 	}
 	log.Println("Connected to database")
 	defer db.Close()
+
+	ws.StartServer(config.Port)
 }

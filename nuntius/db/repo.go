@@ -41,7 +41,7 @@ func CreateMessage(text string, chanId string) (string, error) {
 }
 
 // FindInChannel finds all the messages in a channel ordered by date
-// TODO pagination(?)
+// TODO pagination(?, maybe not)
 func FindInChannel(chanId string) ([]Message, error) {
 	ctx := context.Background()
 

@@ -59,7 +59,7 @@ func Setup() error {
 		},
 	)
 	if err != nil {
-		log.Printf("Index %s already exists.", name)
+		return err
 	}
 	log.Printf("Created index %s", name)
 	return nil
