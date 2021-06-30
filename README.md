@@ -46,4 +46,11 @@ MIT
 - [x] RabbitMQ fanout exchange
 - [x] Replicate user data on nuntius
 - [x] Replicate channel data on nuntius
-- [ ] Retry postgres connections for amnis and populus
+- [ ] Retry postgres connection for amnis and populus
+- [ ] API client
+- [ ] Global elements: navbar, container, etc.
+- [ ] Login/Signup/Logout
+- [ ] Channels page
+- [ ] Create chnanel
+- [ ] Messaging page
+- [ ] Nuntius: add route for intiail messages load
