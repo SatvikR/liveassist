@@ -6,7 +6,7 @@ import (
 
 	"github.com/SatvikR/liveassist/nuntius/config"
 	"github.com/SatvikR/liveassist/nuntius/db"
-	"github.com/SatvikR/liveassist/nuntius/deliver/ws"
+	"github.com/SatvikR/liveassist/nuntius/delivery/ws"
 	"github.com/SatvikR/liveassist/nuntius/messaging"
 )
 
