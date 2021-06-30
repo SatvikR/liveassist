@@ -24,7 +24,7 @@ type User struct {
 	Username string `bson:"username" json:"username"`
 }
 
-type Channels struct {
+type Channel struct {
 	Cid string `bson:"cid" json:"cid"`
 }
 
@@ -128,4 +128,18 @@ func SaveChannel(chanId string) error {
 		newChannel,
 	)
 	return err
+}
+
+// FindChannel finds a channel based on the id
+func FindChannel(chanId string) (Channel, error) {
+	queryFilter := bson.D{{Key: "cid", Value: chanId}}
+	res := channels.FindOne(
+		context.Background(),
+		queryFilter,
+	)
+	var channel Channel
+	if err := res.Decode(&channel); err != nil {
+		return Channel{}, err
+	}
+	return channel, nil
 }

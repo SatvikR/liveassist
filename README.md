@@ -45,5 +45,5 @@ MIT
 - [ ] Channel pagination
 - [x] RabbitMQ fanout exchange
 - [x] Replicate user data on nuntius
-- [ ] Replicate channel data on nuntius
+- [x] Replicate channel data on nuntius
 - [ ] Retry postgres connections for amnis and populus

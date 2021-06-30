@@ -14,3 +14,11 @@ func SaveMessage(message, channelId string, userId int) (db.Message, error) {
 	}
 	return msgData, nil
 }
+
+// ChannelExists returns whether or not a channel exists
+// You are probably wondering: "Oh really? I never would've guessed!".
+// And to that I say: "yes."
+func ChannelExists(chanId string) bool {
+	_, err := db.FindChannel(chanId)
+	return err == nil
+}
