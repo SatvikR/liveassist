@@ -7,6 +7,7 @@ import (
 
 	"github.com/SatvikR/liveassist/amnis/db"
 	"github.com/SatvikR/liveassist/omnis/mq"
+	"github.com/streadway/amqp"
 )
 
 func listen() error {
@@ -25,13 +26,15 @@ func listen() error {
 
 	go func() {
 		for delivery := range msgs {
-			var data mq.UserMessage
-			err := json.Unmarshal(delivery.Body, &data)
-			if err != nil {
-				log.Printf("Invalid message recieved: %s", err.Error())
-				continue
-			}
-			go handleMsg(data)
+			go func(delivery amqp.Delivery) {
+				var data mq.UserMessage
+				err := json.Unmarshal(delivery.Body, &data)
+				if err != nil {
+					log.Printf("Invalid message recieved: %s", err.Error())
+					return
+				}
+				go handleMsg(data)
+			}(delivery)
 		}
 	}()
 

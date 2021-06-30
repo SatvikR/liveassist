@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	conn  *amqp.Connection
-	ch    *amqp.Channel
-	queue amqp.Queue
+	conn       *amqp.Connection
+	ch         *amqp.Channel
+	usersQueue amqp.Queue
+	chQueue    amqp.Queue
 )
 
 // Setup initializes the rabbit mq connection
@@ -27,12 +28,26 @@ func Setup() error {
 	if err != nil {
 		return err
 	}
-	_queue, err := mq.GetNonDurableQueue(ch)
+	if _, err := mq.GetFanoutExchange(mq.PopulusExchange, ch); err != nil {
+		return err
+	}
+	if _, err := mq.GetFanoutExchange(mq.AmnisExchange, ch); err != nil {
+		return err
+	}
+	_usersQueue, err := mq.GetNonDurableQueue(ch)
 	if err != nil {
 		return err
 	}
-	queue = _queue
-	if err := mq.BindQueue(queue.Name, mq.PopulusExchange, ch); err != nil {
+	usersQueue = _usersQueue
+	if err := mq.BindQueue(usersQueue.Name, mq.PopulusExchange, ch); err != nil {
+		return err
+	}
+	_chQueue, err := mq.GetNonDurableQueue(ch)
+	if err != nil {
+		return err
+	}
+	chQueue = _chQueue
+	if err := mq.BindQueue(chQueue.Name, mq.AmnisExchange, ch); err != nil {
 		return err
 	}
 	err = listen()

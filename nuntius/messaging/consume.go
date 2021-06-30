@@ -7,11 +7,24 @@ import (
 
 	"github.com/SatvikR/liveassist/nuntius/db"
 	"github.com/SatvikR/liveassist/omnis/mq"
+	"github.com/streadway/amqp"
 )
 
 func listen() error {
-	msgs, err := ch.Consume(
-		queue.Name,
+	userMsgs, err := ch.Consume(
+		usersQueue.Name,
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+	chMsgs, err := ch.Consume(
+		chQueue.Name,
 		"",
 		true,
 		false,
@@ -24,23 +37,47 @@ func listen() error {
 	}
 
 	go func() {
-		for delivery := range msgs {
-			var data mq.UserMessage
-			err := json.Unmarshal(delivery.Body, &data)
-			if err != nil {
-				log.Printf("Invalid message recieved: %s", err.Error())
-				continue
-			}
-			go handleMsg(data)
+		for delivery := range userMsgs {
+			go func(delivery amqp.Delivery) {
+				var data mq.UserMessage
+				err := json.Unmarshal(delivery.Body, &data)
+				if err != nil {
+					log.Printf("Invalid message recieved: %s", err.Error())
+					return
+				}
+				go handleUserMsg(data)
+			}(delivery)
+		}
+	}()
+	go func() {
+		for delivery := range chMsgs {
+			go func(delivery amqp.Delivery) {
+				var data mq.ChannelMessage
+				err := json.Unmarshal(delivery.Body, &data)
+				if err != nil {
+					log.Printf("Invalid message recieved: %s", err.Error())
+					return
+				}
+				go handleChMsg(data)
+			}(delivery)
 		}
 	}()
 	return nil
 }
 
-func handleMsg(data mq.UserMessage) error {
+func handleUserMsg(data mq.UserMessage) error {
 	switch data.Event {
 	case mq.UserCreated:
 		return db.SaveUser(data.Username, data.ID)
+	default:
+		return mq.ErrInvalidEvent
+	}
+}
+
+func handleChMsg(data mq.ChannelMessage) error {
+	switch data.Event {
+	case mq.ChannelCreated:
+		return db.SaveChannel(data.ID)
 	default:
 		return mq.ErrInvalidEvent
 	}

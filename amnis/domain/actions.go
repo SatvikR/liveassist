@@ -3,9 +3,11 @@ package domain
 
 import (
 	"errors"
+	"log"
 	"strings"
 
 	"github.com/SatvikR/liveassist/amnis/db"
+	"github.com/SatvikR/liveassist/amnis/messaging"
 	"github.com/SatvikR/liveassist/omnis"
 )
 
@@ -42,6 +44,9 @@ func Create(name string, ownerID int, keywords []string) (string, error) {
 	// Error handling
 	if err != nil {
 		return "", omnis.ErrCouldNotCreate
+	}
+	if err := messaging.DispatchChannelData(id); err != nil {
+		log.Printf("Unable to send message: %s", err.Error())
 	}
 	return id, nil
 }

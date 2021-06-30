@@ -17,11 +17,13 @@ var (
 	client   *mongo.Client
 	messages *mongo.Collection
 	users    *mongo.Collection
+	channels *mongo.Collection
 )
 
 const (
 	messagesCollection string = "messages"
 	usersCollection    string = "users"
+	channelsCollection string = "channels"
 )
 
 // Setup will connect to the mongodb database and setup everything.
@@ -50,7 +52,7 @@ func Setup() error {
 	// Setup Collections
 	messages = client.Database(cs.Database).Collection(messagesCollection)
 	users = client.Database(cs.Database).Collection(usersCollection)
-
+	channels = client.Database(cs.Database).Collection(channelsCollection)
 	// Indexes
 	_, err = messages.Indexes().CreateOne(
 		ctx,
@@ -69,6 +71,17 @@ func Setup() error {
 		mongo.IndexModel{
 			Keys: bson.D{
 				{Key: "uid", Value: 1},
+			},
+		},
+	)
+	if err != nil {
+		return err
+	}
+	_, err = channels.Indexes().CreateOne(
+		ctx,
+		mongo.IndexModel{
+			Keys: bson.D{
+				{Key: "cid", Value: 1},
 			},
 		},
 	)

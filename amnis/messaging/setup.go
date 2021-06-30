@@ -27,6 +27,9 @@ func Setup() error {
 	if _, err := mq.GetFanoutExchange(mq.PopulusExchange, ch); err != nil {
 		return err
 	}
+	if _, err := mq.GetFanoutExchange(mq.AmnisExchange, ch); err != nil {
+		return err
+	}
 	_queue, err := mq.GetNonDurableQueue(ch)
 	if err != nil {
 		return err

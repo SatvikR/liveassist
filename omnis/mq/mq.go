@@ -8,13 +8,14 @@ import (
 )
 
 const (
-	AmnisQName      string = "amnis"
 	PopulusExchange string = "populus"
+	AmnisExchange   string = "amnis"
 )
 
-// populus events
+// events
 const (
-	UserCreated string = "USER_CREATED"
+	UserCreated    string = "USER_CREATED"
+	ChannelCreated string = "CHANNEL_CREATED"
 )
 
 var (
@@ -25,6 +26,11 @@ type UserMessage struct {
 	Event    string `json:"event"`
 	ID       int    `json:"id"`
 	Username string `json:"username"`
+}
+
+type ChannelMessage struct {
+	Event string `json:"event"`
+	ID    string `json:"id"`
 }
 
 // Connect connects to the amql address, and returns a connection and a channel.
