@@ -24,10 +24,14 @@ func Setup() error {
 	log.Println("Connected to rabbit mq")
 	conn = _conn
 	ch = _ch
+	if _, err := mq.GetFanoutExchange(mq.PopulusExchange, ch); err != nil {
+		return err
+	}
 	_queue, err := mq.GetNonDurableQueue(ch)
 	if err != nil {
 		return err
 	}
+
 	queue = _queue
 	if err := mq.BindQueue(queue.Name, mq.PopulusExchange, ch); err != nil {
 		return err

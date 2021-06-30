@@ -7,10 +7,10 @@ import (
 )
 
 // SaveMessage saves a message
-func SaveMessage(message, channelId string, userId int) error {
-	_, err := db.CreateMessage(message, channelId, userId)
+func SaveMessage(message, channelId string, userId int) (db.Message, error) {
+	msgData, err := db.CreateMessage(message, channelId, userId)
 	if err != nil {
-		return omnis.ErrCouldNotCreate
+		return db.Message{}, omnis.ErrCouldNotCreate
 	}
-	return nil
+	return msgData, nil
 }

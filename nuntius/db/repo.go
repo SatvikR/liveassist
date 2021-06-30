@@ -25,20 +25,25 @@ type User struct {
 }
 
 // CreateMessage stores a message in the database
-func CreateMessage(text string, chanId string, userId int) (string, error) {
+func CreateMessage(text string, chanId string, userId int) (Message, error) {
 	user, err := GetUser(userId)
 	if err != nil {
-		return "", err
+		return Message{}, err
 	}
 
+	msgData := Message{
+		CreatedAt: time.Now(),
+		Text:      text,
+		User:      user,
+		ChannelID: chanId,
+	}
 	newMessage := bson.D{
-		{Key: "text", Value: text},
-		{Key: "channelId", Value: chanId},
-		{Key: "createdAt", Value: time.Now()},
-		// {Key: "userId", Value: userId},
+		{Key: "text", Value: msgData.Text},
+		{Key: "channelId", Value: msgData.ChannelID},
+		{Key: "createdAt", Value: msgData.CreatedAt},
 		{Key: "user", Value: bson.D{
-			{Key: "uid", Value: user.Uid},
-			{Key: "username", Value: user.Username},
+			{Key: "uid", Value: msgData.User.Uid},
+			{Key: "username", Value: msgData.User.Username},
 		}},
 	}
 	_id, err := messages.InsertOne(
@@ -46,14 +51,15 @@ func CreateMessage(text string, chanId string, userId int) (string, error) {
 		newMessage,
 	)
 	if err != nil {
-		return "", err
+		return Message{}, err
 	}
 	id, ok := _id.InsertedID.(primitive.ObjectID)
+	msgData.ID = id
 	if !ok {
-		return "", errors.New("unable to parse id")
+		return Message{}, errors.New("unable to parse id")
 	}
 
-	return id.Hex(), nil
+	return msgData, nil
 }
 
 // FindInChannel finds all the messages in a channel ordered by date

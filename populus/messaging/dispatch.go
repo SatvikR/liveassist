@@ -20,7 +20,7 @@ func DispatchUserData(id int, username string) error {
 	}
 
 	err = ch.Publish(
-		exchange,
+		mq.PopulusExchange,
 		"",
 		false,
 		false,

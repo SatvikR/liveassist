@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/SatvikR/liveassist/nuntius/db"
 	"github.com/SatvikR/liveassist/nuntius/domain"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -69,23 +70,15 @@ func newClient(chanId string, hub *hub, conn *websocket.Conn, userId int) *clien
 	}
 }
 
-func newMessage(text, chanId string, userId int) (*message, error) {
-	type messageData struct {
-		UserId int    `json:"userId"`
-		Text   string `json:"text"`
-	}
-
-	data, err := json.Marshal(&messageData{
-		UserId: userId,
-		Text:   text,
-	})
+func newMessage(msgObj db.Message) (*message, error) {
+	data, err := json.Marshal(&msgObj)
 	if err != nil {
 		return nil, err
 	}
 
 	return &message{
 		data:   data,
-		chanId: chanId,
+		chanId: msgObj.ChannelID,
 	}, nil
 }
 
@@ -134,12 +127,13 @@ func (c *client) readPump() {
 				break
 			}
 		}
-		var messageData messageBody
-		if err = json.Unmarshal(message, &messageData); err == nil {
-			if err := domain.SaveMessage(messageData.Text, c.chanId, c.userId); err != nil {
+		var msgBody messageBody
+		if err = json.Unmarshal(message, &msgBody); err == nil {
+			msgObj, err := domain.SaveMessage(msgBody.Text, c.chanId, c.userId)
+			if err != nil {
 				log.Printf("error: %v", err)
 			}
-			if pmessage, err := newMessage(messageData.Text, c.chanId, c.userId); err == nil {
+			if pmessage, err := newMessage(msgObj); err == nil {
 				c.hub.broadcast <- pmessage
 			}
 		}
