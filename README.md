@@ -15,6 +15,7 @@
 | verum     | Auth server                             |
 | nuntius   | Message service                         |
 | docker    | docker images and config files          |
+| ostium    | Next.js site                            |
 
 ## Run locally
 
