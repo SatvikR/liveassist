@@ -9,7 +9,7 @@ services="populus amnis verum nuntius"
 
 for service in $services; do
 	echo ----------BUILDING $service----------
-	docker build -t satvikr/liveassist_$service:latest -f ./docker/Dockerfile.$service .
+	docker buildx build -t satvikr/liveassist_$service:latest -f ./docker/Dockerfile.$service .
 	echo ----------SENDING $service----------
 	docker save satvikr/liveassist_$service:latest | bzip2 | ssh $LA_SSH "bunzip2 | sudo docker load"
 done
