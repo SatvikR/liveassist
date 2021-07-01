@@ -5,17 +5,28 @@ if [[ -z "${LA_SSH}" ]]; then
 	exit 1
 fi
 
-docker build -t satvikr/liveassist_populus:latest -f ./docker/Dockerfile.populus .
-docker save satvikr/liveassist_populus:latest | bzip2 | ssh $LA_SSH "bunzip2 | sudo docker load"
+services="populus amnis verum nuntius"
 
-docker build -t satvikr/liveassist_amnis:latest -f ./docker/Dockerfile.amnis .
-docker save satvikr/liveassist_amnis:latest | bzip2 | ssh $LA_SSH "bunzip2 | sudo docker load"
+for service in $services; do
+	echo ----------BUILDING $service----------
+	docker build -t satvikr/liveassist_$service:latest -f ./docker/Dockerfile.$service .
+	echo ----------SENDING $service----------
+	docker save satvikr/liveassist_$service:latest | bzip2 | ssh $LA_SSH "bunzip2 | sudo docker load"
+done
 
-docker build -t satvikr/liveassist_verum:latest -f ./docker/Dockerfile.verum .
-docker save satvikr/liveassist_verum:latest | bzip2 | ssh $LA_SSH "bunzip2 | sudo docker load"
+files="./deploy/docker-compose.yml ./deploy/config/.env"
 
-docker build -t satvikr/liveassist_nuntius:latest -f ./docker/Dockerfile.nuntius .
-docker save satvikr/liveassist_nuntius:latest | bzip2 | ssh $LA_SSH "bunzip2 | sudo docker load"
+for file in $files; do
+	bname="$(basename $file)"
+	echo ----------SENDING $file----------
+	cat $file | bzip2 | ssh $LA_SSH "bunzip2 > $bname"
+done
 
-cat ./deploy/docker-compose.yml | bzip2 | ssh $LA_SSH "bunzip2 >> docker-compose.yml"
-ssh $LA_SSH "sudo docker-compose up -d"
+echo ----------RESTARTING SERVICES----------
+ssh $LA_SSH "sudo docker-compose stop"
+for service in $services; do
+	ssh $LA_SSH "sudo docker-compose rm -f -- $service"
+done
+ssh $LA_SSH "sudo docker-compose --env-file .env up -d"
+echo ----------PRUNING OLD IMAGES----------
+ssh $LA_SSH "sudo docker image prune -f"

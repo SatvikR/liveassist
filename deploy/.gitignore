@@ -1,0 +1,3 @@
+# contains sensitive info
+config/*
+!config/README.txt

@@ -1,0 +1,132 @@
+version: '3'
+
+# only to be used in development
+
+services:
+  populus:
+    image: satvikr/liveassist_populus
+    environment:
+      - DB_ADDR=postgres_populus:5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=liveassist_populus
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - DOMAIN=localhost
+      - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
+      - PORT=5001
+    expose:
+      - 5001
+    ports:
+      - 5001:5001
+    depends_on:
+      postgres_populus:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  amnis:
+    image: satvikr/liveassist_amnis
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.amnis
+    environment:
+      - DB_ADDR=postgres_amnis:5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=liveassist_amnis
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
+      - PORT=5002
+    expose:
+      - 5002
+    ports:
+      - 5002:5002
+    depends_on:
+      postgres_amnis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  nuntius:
+    image: satvikr/liveassist_nuntius
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.nuntius
+    environment:
+      - DB_URI=mongodb://mongodb_nuntius:27017/liveassist_nuntius
+      - DB_NAME=liveassist_nuntius
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
+      - PORT=5003
+    expose:
+      - 5003
+    ports:
+      - 5003:5003
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongodb_nuntius:
+        condition: service_started
+  verum:
+    image: satvikr/liveassist_verum
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.verum
+    environment:
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - DOMAIN=localhost
+      - PORT=5004
+    expose:
+      - 5004
+    ports:
+      - 5004:5004
+  postgres_populus:
+    image: postgres
+    volumes:
+      - populus_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=liveassist_populus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  postgres_amnis:
+    image: postgres
+    volumes:
+      - amnis_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=liveassist_amnis
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  rabbitmq:
+    image: rabbitmq
+    volumes:
+      - mqdata:/var/lib/rabbitmq
+      - mqlogs:/var/log/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=lassist
+      - RABBITMQ_DEFAULT_PASS=lassist
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  mongodb_nuntius:
+    image: mongo
+    volumes:
+      - nuntius_data:/data/db
+
+volumes:
+  populus_data:
+  amnis_data:
+  nuntius_data:
+  mqdata:
+  mqlogs:
