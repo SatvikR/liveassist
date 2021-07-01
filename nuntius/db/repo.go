@@ -4,6 +4,7 @@ package db
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -32,6 +33,7 @@ type Channel struct {
 func CreateMessage(text string, chanId string, userId int) (Message, error) {
 	user, err := GetUser(userId)
 	if err != nil {
+		log.Printf("error: %v", err)
 		return Message{}, err
 	}
 
@@ -55,11 +57,13 @@ func CreateMessage(text string, chanId string, userId int) (Message, error) {
 		newMessage,
 	)
 	if err != nil {
+		log.Printf("error: %v", err)
 		return Message{}, err
 	}
 	id, ok := _id.InsertedID.(primitive.ObjectID)
 	msgData.ID = id
 	if !ok {
+		log.Printf("error: %v", err)
 		return Message{}, errors.New("unable to parse id")
 	}
 

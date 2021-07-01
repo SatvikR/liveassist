@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/SatvikR/liveassist/nuntius/db"
 	"github.com/SatvikR/liveassist/nuntius/domain"
@@ -123,9 +124,7 @@ func (c *client) readPump() {
 	for {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				break
-			}
+			break
 		}
 		var msgBody messageBody
 		if err = json.Unmarshal(message, &msgBody); err == nil {
@@ -141,18 +140,34 @@ func (c *client) readPump() {
 }
 
 func (c *client) writePump() {
+	ticker := time.NewTicker(60 * time.Second * 9 / 10) // Almost 60 seconds
+
 	defer func() {
+		ticker.Stop()
 		c.conn.Close()
 	}()
 
-	for message := range c.send {
-		w, err := c.conn.NextWriter(websocket.TextMessage)
-		if err != nil {
-			return
-		}
-		w.Write(message.data)
-		if err := w.Close(); err != nil {
-			return
+	for {
+		select {
+		case message, ok := <-c.send:
+			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+
+			if !ok {
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+			}
+			w, err := c.conn.NextWriter(websocket.TextMessage)
+			if err != nil {
+				return
+			}
+			w.Write(message.data)
+			if err := w.Close(); err != nil {
+				return
+			}
+		case <-ticker.C:
+			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
 		}
 	}
 }

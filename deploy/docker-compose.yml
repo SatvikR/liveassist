@@ -12,7 +12,7 @@ services:
       - DB_NAME=liveassist_populus
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
-      - DOMAIN=localhost
+      - DOMAIN=${DOMAIN}
       - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
       - PORT=5001
     expose:
@@ -74,7 +74,7 @@ services:
     environment:
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
-      - DOMAIN=localhost
+      - DOMAIN=${DOMAIN}
       - PORT=5004
     expose:
       - 5004
