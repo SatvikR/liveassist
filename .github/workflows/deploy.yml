@@ -25,7 +25,7 @@ jobs:
         name: Run deploy script
         run: |
           echo "${{ secrets.SSH_KEY }}" > ./key.pem
-          export LA_SSH="ssh -i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR }}"
+          export LA_SSH="-i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR }}"
           chmod +x ./deploy.sh
           ./deploy.sh
 
