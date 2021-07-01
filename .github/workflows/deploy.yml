@@ -21,11 +21,11 @@ jobs:
         with:
           envkey_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
           envkey_REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-          directory: ./deploy/config
           file_name: .env
       -
         name: Run deploy script
         run: |
+          mv .env ./deploy/config
           echo ${{ secrets.SSH_KEY }} > ./key.pem
           export LA_SSH="ssh -i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR}}"
           chmod +x ./deploy.sh
