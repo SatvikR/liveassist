@@ -1,0 +1,34 @@
+name: Deploy Backend Services
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout code
+        uses: actions/checkout@v2
+      -
+        name: Install Docker
+        uses: docker-practice/actions-setup-docker@master
+      -
+        name: Create .env file
+        uses: SpicyPizza/create-envfile@v1.1
+        with:
+          envkey_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          envkey_REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+          directory: ./deploy/config
+          file_name: .env
+      -
+        name: Run deploy script
+        run: |
+          echo ${{ secrets.SSH_KEY }} > ./key.pem
+          export LA_SSH="ssh -i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR}}"
+          chmod +x ./deploy.sh
+          ./deploy.sh
+
+
