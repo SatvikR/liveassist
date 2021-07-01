@@ -5,8 +5,6 @@ if [[ -z "${LA_SSH}" ]]; then
 	exit 1
 fi
 
-yes | ssh $LA_SSH "echo verify"
-
 services="populus amnis verum nuntius"
 
 for service in $services; do

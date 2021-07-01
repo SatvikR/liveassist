@@ -22,10 +22,26 @@ jobs:
           echo "REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}" >> ./deploy/config/.env
           echo "DOMAIN=${{ secrets.DOMAIN }}" >> ./deploy/config/.env
       -
+        name: Setup SSH Host
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_ADDR }}
+      -
         name: Run deploy script
         run: |
-          echo "${{ secrets.SSH_KEY }}" > ./key.pem
-          export LA_SSH="-i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR }}"
+          export LA_SSH="staging"
           chmod +x ./deploy.sh
           ./deploy.sh
 
