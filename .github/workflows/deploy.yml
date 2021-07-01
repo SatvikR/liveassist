@@ -18,13 +18,13 @@ jobs:
       -
         name: Create .env file
         run: |
-          echo "ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}"
-          echo "REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}"
-          echo "DOMAIN=${{ secrets.DOMAIN }}"
+          echo "ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}" >> ./deploy/config/.env
+          echo "REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}" >> ./deploy/config/.env
+          echo "DOMAIN=${{ secrets.DOMAIN }}" >> ./deploy/config/.env
       -
         name: Run deploy script
         run: |
-          echo ${{ secrets.SSH_KEY }} > ./key.pem
+          echo "${{ secrets.SSH_KEY }}" > ./key.pem
           export LA_SSH="ssh -i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR }}"
           chmod +x ./deploy.sh
           ./deploy.sh
