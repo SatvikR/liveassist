@@ -1,1 +1,1 @@
-Put your .env file here with your ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET
+Put your .env file here with your DOMAIN, ACCESS_TOKEN_SECRET, and REFRESH_TOKEN_SECRET

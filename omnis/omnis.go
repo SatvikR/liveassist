@@ -5,7 +5,9 @@ import (
 	"errors"
 	"log"
 	"strconv"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,4 +43,18 @@ func GetDomain() []string {
 		origins = []string{"http://localhost:3000"}
 	}
 	return origins
+}
+
+func GetCors() gin.HandlerFunc {
+	origins := GetDomain()
+	corsConfig := cors.Config{
+		AllowOrigins:     origins,
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+	cors := cors.New(corsConfig)
+	return cors
 }

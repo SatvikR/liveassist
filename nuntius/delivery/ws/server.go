@@ -8,6 +8,7 @@ import (
 	"github.com/SatvikR/liveassist/clavis"
 	"github.com/SatvikR/liveassist/nuntius/config"
 	"github.com/SatvikR/liveassist/nuntius/domain"
+	"github.com/SatvikR/liveassist/omnis"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +18,7 @@ func StartServer(port int) {
 	hub := newHub()
 	go hub.start()
 	r := gin.Default()
+	r.Use(omnis.GetCors())
 	a := r.Use(clavis.JWTAuthMiddleware(config.AccessTokenKey))
 	a.GET("/messages/ws", func(c *gin.Context) {
 		chanId := c.Query("channel")
