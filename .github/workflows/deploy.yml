@@ -17,17 +17,15 @@ jobs:
         uses: docker-practice/actions-setup-docker@master
       -
         name: Create .env file
-        uses: SpicyPizza/create-envfile@v1.1
-        with:
-          envkey_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-          envkey_REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-          file_name: .env
+        run: |
+          echo "ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}"
+          echo "REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}"
+          echo "DOMAIN=${{ secrets.DOMAIN }}"
       -
         name: Run deploy script
         run: |
-          mv .env ./deploy/config
           echo ${{ secrets.SSH_KEY }} > ./key.pem
-          export LA_SSH="ssh -i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR}}"
+          export LA_SSH="ssh -i ./key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_ADDR }}"
           chmod +x ./deploy.sh
           ./deploy.sh
 
