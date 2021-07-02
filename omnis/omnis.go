@@ -37,8 +37,7 @@ func GetPort(portString string, defaultPort int) int {
 func GetDomain() []string {
 	var origins []string
 	if gin.Mode() == gin.ReleaseMode {
-		// TODO change this url to the prod url
-		origins = []string{"http://localhost:3000"}
+		origins = []string{"https://liveassist.satvikreddy.com/"}
 	} else {
 		origins = []string{"http://localhost:3000"}
 	}
