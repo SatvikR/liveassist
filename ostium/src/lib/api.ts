@@ -1,3 +1,5 @@
 import { HTTPClient } from "@liveassist/liber";
 
-export const api = new HTTPClient("http://localhost:5003");
+const apiUrl = process.env.API_URL;
+
+export const api = !!apiUrl ? new HTTPClient(apiUrl) : new HTTPClient();
