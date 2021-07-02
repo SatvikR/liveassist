@@ -7,7 +7,6 @@ import (
 	"github.com/SatvikR/liveassist/amnis/config"
 	"github.com/SatvikR/liveassist/clavis"
 	"github.com/SatvikR/liveassist/omnis"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,27 +15,16 @@ import (
 func StartServer(port int) {
 	r := gin.Default()
 
+	r.Use(omnis.GetCors())
 	g := r.Group("/api/channels")
 	a := r.Group("/api/channels")
+
 	a.Use(clavis.JWTAuthMiddleware(config.AccessTokenKey))
 
 	a.POST("/", create)
 	a.DELETE("/:id", delete)
 	g.GET("/:id", channel)
 	g.GET("/", channels)
-
-	origins := omnis.GetDomain()
-
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = origins
-	corsConfig.AllowCredentials = true
-	corsConfig.AllowHeaders = []string{
-		"Origin",
-		"Content-Length",
-		"Content-Type",
-		"Authorization",
-	}
-	r.Use(cors.New(corsConfig))
 
 	r.Run(fmt.Sprintf(":%d", port))
 }

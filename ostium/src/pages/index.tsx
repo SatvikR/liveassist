@@ -1,5 +1,13 @@
-import { Heading } from "@chakra-ui/react";
+import { Nav } from "../components/Nav";
+import { Channels } from "../modules/Channels";
 
-const Index = () => <Heading>LiveAssist</Heading>;
+const Index = () => {
+  return (
+    <>
+      <Nav />
+      <Channels />
+    </>
+  );
+};
 
 export default Index;

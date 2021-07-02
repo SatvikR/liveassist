@@ -5,7 +5,9 @@ import (
 	"errors"
 	"log"
 	"strconv"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,10 +37,23 @@ func GetPort(portString string, defaultPort int) int {
 func GetDomain() []string {
 	var origins []string
 	if gin.Mode() == gin.ReleaseMode {
-		// TODO change this url to the prod url
-		origins = []string{"http://localhost:3000"}
+		origins = []string{"https://liveassist.satvikreddy.com/"}
 	} else {
 		origins = []string{"http://localhost:3000"}
 	}
 	return origins
+}
+
+func GetCors() gin.HandlerFunc {
+	origins := GetDomain()
+	corsConfig := cors.Config{
+		AllowOrigins:     origins,
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+	cors := cors.New(corsConfig)
+	return cors
 }

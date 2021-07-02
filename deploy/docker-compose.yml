@@ -6,6 +6,7 @@ services:
   populus:
     image: satvikr/liveassist_populus
     environment:
+      - GIN_MODE=release
       - DB_ADDR=postgres_populus:5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
@@ -30,6 +31,7 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile.amnis
     environment:
+      - GIN_MODE=release
       - DB_ADDR=postgres_amnis:5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
@@ -52,6 +54,7 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile.nuntius
     environment:
+      - GIN_MODE=release
       - DB_URI=mongodb://mongodb_nuntius:27017/liveassist_nuntius
       - DB_NAME=liveassist_nuntius
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
@@ -72,6 +75,7 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile.verum
     environment:
+      - GIN_MODE=release
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
       - DOMAIN=${DOMAIN}

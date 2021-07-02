@@ -14,6 +14,7 @@ import (
 var (
 	ErrChannelDoesNotExist error = errors.New("channel does not exist")
 	ErrCannotFindChannels  error = errors.New("cannot fetch channels")
+	ErrNotOwner            error = errors.New("you do not own this channel")
 )
 
 type Owner struct {
@@ -52,8 +53,15 @@ func Create(name string, ownerID int, keywords []string) (string, error) {
 }
 
 // Delete deletes a channel from an id. Can return ErrChannelDoesNotExist.
-func Delete(id string) error {
-	err := db.DeleteChannel(id)
+func Delete(id string, userId int) error {
+	c, err := db.FindChannel(id)
+	if err != nil {
+		return ErrChannelDoesNotExist
+	}
+	if c.Owner.ID != userId {
+		return ErrNotOwner
+	}
+	err = db.DeleteChannel(id)
 	if err != nil {
 		return ErrChannelDoesNotExist
 	}

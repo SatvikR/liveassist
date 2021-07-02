@@ -1,0 +1,13 @@
+{
+  "name": "liveassist",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "repository": "git@github.com:SatvikR/liveassist.git",
+  "author": "SatvikR <49799352+SatvikR@users.noreply.github.com>",
+  "license": "MIT",
+  "workspaces": [
+    "ostium",
+    "liber"
+  ]
+}
