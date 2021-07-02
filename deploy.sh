@@ -23,10 +23,7 @@ for file in $files; do
 done
 
 echo ----------RESTARTING SERVICES----------
-ssh $LA_SSH "sudo docker-compose stop"
-for service in $services; do
-	ssh $LA_SSH "sudo docker-compose rm -f -- $service"
-done
+ssh $LA_SSH "sudo docker-compose down"
 ssh $LA_SSH "sudo docker-compose --env-file .env up -d"
 echo ----------PRUNING OLD IMAGES----------
 ssh $LA_SSH "sudo docker image prune -f"
