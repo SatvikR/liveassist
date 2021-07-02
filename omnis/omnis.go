@@ -37,7 +37,7 @@ func GetPort(portString string, defaultPort int) int {
 func GetDomain() []string {
 	var origins []string
 	if gin.Mode() == gin.ReleaseMode {
-		origins = []string{"https://liveassist.satvikreddy.com/"}
+		origins = []string{"https://liveassist.satvikreddy.com"}
 	} else {
 		origins = []string{"http://localhost:3000"}
 	}
