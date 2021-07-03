@@ -1,7 +1,3 @@
-import { ChannelService } from "./channels";
-export declare class HTTPClient {
-    private api;
-    private _channels;
-    constructor(url?: string);
-    get channels(): ChannelService;
-}
+export * from "./client";
+export * from "./channels";
+export * from "./types";

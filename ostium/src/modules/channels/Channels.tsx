@@ -1,14 +1,19 @@
 import { Heading } from "@chakra-ui/layout";
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { Channel } from "@liveassist/liber";
+import React from "react";
 import { useQuery } from "react-query";
 import { api } from "../../lib/api";
 
-export interface ChannelsProps {}
+export interface ChannelsProps {
+  channels: Channel[];
+}
 
-export const Channels: React.FC<ChannelsProps> = ({}) => {
-  const { isLoading, data, isError } = useQuery("channels", () =>
-    api.channels.list()
+export const Channels: React.FC<ChannelsProps> = ({ channels }) => {
+  const { isLoading, data, isError } = useQuery(
+    "channels",
+    () => api.channels.list(),
+    { initialData: channels }
   );
 
   let body: JSX.Element;

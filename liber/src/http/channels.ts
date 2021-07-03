@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { Channel } from "./types";
 
 export class ChannelService {
   private readonly BASE_PATH = "/api/channels/";
@@ -12,16 +13,4 @@ export class ChannelService {
     const res = await this.api.get<Channel[]>(`${this.BASE_PATH}`);
     return res.data;
   }
-}
-
-export interface Channel {
-  id: string;
-  name: string;
-  keywords: string[];
-  owner: Owner;
-}
-
-export interface Owner {
-  id: number;
-  username: string;
 }
