@@ -6,17 +6,18 @@
 
 ## Structure
 
-| Directory | What it is                              |
-| --------- | --------------------------------------- |
-| clavis    | JWT Token utils                         |
-| omnis     | Global errors, constants, and functions |
-| populus   | User service                            |
-| amnis     | Channel service                         |
-| verum     | Auth server                             |
-| nuntius   | Message service                         |
-| docker    | docker images and config files          |
-| liber     | Typescript API client                   |
-| ostium    | Next.js site                            |
+| Directory          | What it is                              |
+| ------------------ | --------------------------------------- |
+| [clavis](clavis)   | JWT Token utils                         |
+| [omnis](omnis)     | Global errors, constants, and functions |
+| [populus](populus) | User service                            |
+| [amnis](amnis)     | Channel service                         |
+| [verum](verum)     | Auth server                             |
+| [nuntius](nuntius) | Message service                         |
+| [liber](liber)     | Typescript API client                   |
+| [ostium](ostium)   | Next.js site                            |
+| [deploy](deploy)   | Configuration for deployment            |
+| [docker](docker)   | docker images and config files          |
 
 ## Run locally
 
