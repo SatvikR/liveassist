@@ -15,6 +15,7 @@
 | verum     | Auth server                             |
 | nuntius   | Message service                         |
 | docker    | docker images and config files          |
+| liber     | Typescript API client                   |
 | ostium    | Next.js site                            |
 
 ## Run locally
@@ -49,7 +50,7 @@ MIT
 - [x] Replicate channel data on nuntius
 - [ ] Retry postgres connection for amnis and populus
 - [ ] API client
-- [ ] Global elements: navbar, container, etc.
+- [x] Global elements: navbar, container, etc.
 - [ ] Login/Signup/Logout
 - [ ] Channels page
 - [ ] Create chnanel
