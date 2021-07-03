@@ -96,7 +96,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
   postgres_amnis:
     image: postgres
     volumes:
@@ -109,7 +109,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
   rabbitmq:
     image: rabbitmq
     volumes:
@@ -120,9 +120,9 @@ services:
       - RABBITMQ_DEFAULT_PASS=lassist
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
   mongodb_nuntius:
     image: mongo
     volumes:
