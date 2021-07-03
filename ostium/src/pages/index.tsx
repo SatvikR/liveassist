@@ -1,11 +1,14 @@
+import { Container } from "../components/Container";
 import { Nav } from "../components/Nav";
-import { Channels } from "../modules/Channels";
+import { Channels } from "../modules/channels/Channels";
 
 const Index = () => {
   return (
     <>
       <Nav />
-      <Channels />
+      <Container>
+        <Channels />
+      </Container>
     </>
   );
 };
