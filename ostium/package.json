@@ -15,6 +15,8 @@
     "@liveassist/liber": "1.0.0",
     "framer-motion": "^4.0.3",
     "next": "latest",
+    "next-compose-plugins": "^2.2.1",
+    "next-transpile-modules": "^8.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-query": "^3.18.1"

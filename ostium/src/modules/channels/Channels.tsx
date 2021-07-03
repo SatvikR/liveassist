@@ -10,11 +10,9 @@ export interface ChannelsProps {
 }
 
 export const Channels: React.FC<ChannelsProps> = ({ channels }) => {
-  const { isLoading, data, isError } = useQuery(
-    "channels",
-    () => api.channels.list(),
-    { initialData: channels }
-  );
+  const { isLoading, data, isError } = useQuery("channels", api.channels.list, {
+    initialData: channels,
+  });
 
   let body: JSX.Element;
   if (isLoading) {
