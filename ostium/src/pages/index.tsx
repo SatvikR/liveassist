@@ -1,9 +1,9 @@
 import { GetServerSideProps } from "next";
 import { Container } from "../components/Container";
 import { Nav } from "../components/Nav";
-import { api } from "../lib/api";
 import { Channels } from "../modules/channels/Channels";
 import { Channel } from "@liveassist/liber";
+import { api } from "../lib/api";
 
 interface IndexProps {
   channels: Channel[];
