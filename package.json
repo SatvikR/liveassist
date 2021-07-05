@@ -4,10 +4,13 @@
   "private": true,
   "main": "index.js",
   "repository": "git@github.com:SatvikR/liveassist.git",
-  "author": "SatvikR <49799352+SatvikR@users.noreply.github.com>",
+  "author": "Satvik Reddy <reddy.satvik@gmail.com>",
   "license": "MIT",
   "workspaces": [
     "ostium",
     "liber"
-  ]
+  ],
+  "scripts": {
+    "dev": "yarn workspace @liveassist/ostium dev"
+  }
 }

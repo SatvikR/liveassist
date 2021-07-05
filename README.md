@@ -53,7 +53,8 @@ MIT
 - [ ] API client
 - [x] Global elements: navbar, container, etc.
 - [ ] Login/Signup/Logout
-- [ ] Channels page
+- [x] Channels page
 - [ ] Create chnanel
 - [ ] Messaging page
 - [ ] Nuntius: add route for intiail messages load
+- [ ] All services: Input schema validation
