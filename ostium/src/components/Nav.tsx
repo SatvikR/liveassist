@@ -1,3 +1,4 @@
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Flex } from "@chakra-ui/layout";
 import { Box, Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
@@ -17,6 +18,13 @@ export const Nav: React.FC<NavProps> = ({}) => {
             bgClip="text"
           >
             LiveAssist
+          </Link>
+        </NextLink>
+      </Box>
+      <Box ml="auto">
+        <NextLink href="/login">
+          <Link mr={8}>
+            Login <ArrowForwardIcon mb={0.5} />
           </Link>
         </NextLink>
       </Box>

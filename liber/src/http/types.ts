@@ -9,3 +9,6 @@ export interface Owner {
   id: number;
   username: string;
 }
+export interface TokenResponse {
+  accessToken: string;
+}

@@ -1,9 +1,8 @@
-import { GetServerSideProps } from "next";
-import { Container } from "../components/Container";
-import { Nav } from "../components/Nav";
-import { Channels } from "../modules/channels/Channels";
 import { Channel } from "@liveassist/liber";
+import { GetServerSideProps } from "next";
+import { DefaultPage } from "../components/DefaultPage";
 import { api } from "../lib/api";
+import { Channels } from "../modules/channels/Channels";
 
 interface IndexProps {
   channels: Channel[];
@@ -11,12 +10,9 @@ interface IndexProps {
 
 const Index: React.FC<IndexProps> = ({ channels }) => {
   return (
-    <>
-      <Nav />
-      <Container>
-        <Channels channels={channels} />
-      </Container>
-    </>
+    <DefaultPage>
+      <Channels channels={channels} />
+    </DefaultPage>
   );
 };
 
