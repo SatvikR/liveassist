@@ -3,6 +3,7 @@ import { Form, Formik, FormikProps } from "formik";
 import React from "react";
 import { InputField } from "../../components/InputField";
 import { api } from "../../lib/api";
+import { useTokenStore } from "../../lib/state/useToken";
 
 export interface LoginProps {}
 interface LoginValues {
@@ -11,6 +12,8 @@ interface LoginValues {
 }
 
 export const Login: React.FC<LoginProps> = ({}) => {
+  const setToken = useTokenStore((state) => state.setToken);
+
   return (
     <>
       <Box maxW="800px" p={4} mx="auto">
@@ -25,7 +28,10 @@ export const Login: React.FC<LoginProps> = ({}) => {
 
             if (data.errors) {
               setErrors(data.errors);
+              return;
             }
+
+            setToken(data.accessToken);
             setSubmitting(false);
           }}
         >
