@@ -1,9 +1,9 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 import { Form, Formik, FormikProps } from "formik";
+import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { InputField } from "../../components/InputField";
-import { api } from "../../lib/api";
-import { useTokenStore } from "../../lib/state/useToken";
+import { useLogin } from "../../lib/api-hooks/useLogin";
 
 export interface LoginProps {}
 interface LoginValues {
@@ -12,7 +12,8 @@ interface LoginValues {
 }
 
 export const Login: React.FC<LoginProps> = ({}) => {
-  const setToken = useTokenStore((state) => state.setToken);
+  const login = useLogin();
+  const router = useRouter();
 
   return (
     <>
@@ -24,14 +25,12 @@ export const Login: React.FC<LoginProps> = ({}) => {
             { username, password },
             { setSubmitting, setErrors }
           ) => {
-            const data = await api.users.login(username, password);
-
-            if (data.errors) {
-              setErrors(data.errors);
+            const errors = await login(username, password);
+            if (!errors) {
+              router.push("/");
               return;
             }
-
-            setToken(data.accessToken);
+            setErrors(errors);
             setSubmitting(false);
           }}
         >
