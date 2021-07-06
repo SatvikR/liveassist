@@ -4,7 +4,9 @@ package http
 import (
 	"fmt"
 
+	"github.com/SatvikR/liveassist/clavis"
 	"github.com/SatvikR/liveassist/omnis"
+	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,10 +17,12 @@ func StartServer(port int) {
 	r.Use(omnis.GetCors())
 
 	g := r.Group("/api/users")
+	a := r.Group("/api/users").Use(clavis.JWTAuthMiddleware(config.AccessTokenKey))
 
 	g.POST("/signup", signup)
 	g.POST("/login", login)
 	g.DELETE("/logout", logout)
+	a.GET("/me", me)
 
 	r.Run(fmt.Sprintf(":%d", port))
 }

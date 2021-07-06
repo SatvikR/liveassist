@@ -1,6 +1,6 @@
-import { TokenResponse } from "./types";
-import { BaseService } from "./service";
 import { AxiosError } from "axios";
+import { BaseService } from "./service";
+import { LoginResponse, MeResponse } from "./types";
 
 export class UserService extends BaseService {
   private readonly BASE_PATH = "/api/users";
@@ -8,9 +8,9 @@ export class UserService extends BaseService {
   public async login(
     username: string,
     password: string
-  ): Promise<TokenResponse> {
+  ): Promise<LoginResponse> {
     try {
-      const res = await this.api.post<TokenResponse>(
+      const res = await this.api.post<LoginResponse>(
         `${this.BASE_PATH}/login`,
         {
           username,
@@ -19,7 +19,21 @@ export class UserService extends BaseService {
       );
       return res.data;
     } catch (_e) {
-      const error = _e as AxiosError<TokenResponse>;
+      const error = _e as AxiosError<LoginResponse>;
+      return error.response.data;
+    }
+  }
+
+  public async me(token: string): Promise<MeResponse> {
+    try {
+      const res = await this.api.get<MeResponse>(`${this.BASE_PATH}/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+    } catch (_e) {
+      const error = _e as AxiosError<MeResponse>;
       return error.response.data;
     }
   }

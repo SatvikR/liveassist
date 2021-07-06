@@ -20,6 +20,11 @@ var (
 	ErrPWVerificationFailed error = errors.New("could not verify passowrd")
 )
 
+// UserProfile data with no private info
+type UserProfile struct {
+	Username string `json:"username"`
+}
+
 // Signup creates a user and saves it. Can return the ErrHashFailed, ErrUserExists,
 // or ErrTokenGenFailed errors. If no errors, returns the access token, and refresh token
 func Signup(username string, password string, email string) (string, string, error) {
@@ -61,4 +66,16 @@ func Login(username string, password string) (string, string, error) {
 	}
 
 	return accTok, refTok, err
+}
+
+// Me is a "me query" that returns user data for a user
+func Me(userId int64) (UserProfile, error) {
+	user, err := db.FindUserByID(userId)
+	if err != nil {
+		return UserProfile{}, err
+	}
+
+	return UserProfile{
+		Username: user.Username,
+	}, nil
 }
