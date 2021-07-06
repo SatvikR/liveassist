@@ -17,11 +17,16 @@ export const Login: React.FC<LoginProps> = ({}) => {
         <Heading>Login</Heading>
         <Formik
           initialValues={{ username: "", password: "" }}
-          onSubmit={({ username, password }, { setSubmitting }) => {
-            api.users
-              .login(username, password)
-              .then((data) => console.log(data))
-              .then(() => setSubmitting(false));
+          onSubmit={async (
+            { username, password },
+            { setSubmitting, setErrors }
+          ) => {
+            const data = await api.users.login(username, password);
+
+            if (data.errors) {
+              setErrors(data.errors);
+            }
+            setSubmitting(false);
           }}
         >
           {(props: FormikProps<LoginValues>) => (

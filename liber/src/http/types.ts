@@ -9,6 +9,13 @@ export interface Owner {
   id: number;
   username: string;
 }
+
+export type AccessToken = string;
+export interface TokenResponseErrors {
+  username?: string;
+  password?: string;
+}
 export interface TokenResponse {
-  accessToken: string;
+  accessToken?: AccessToken;
+  errors?: TokenResponseErrors;
 }
