@@ -11,11 +11,19 @@ export interface Owner {
 }
 
 export type AccessToken = string;
-export interface TokenResponseErrors {
+export interface LoginResponseErrors {
   username?: string;
   password?: string;
 }
-export interface TokenResponse {
+export interface LoginResponse {
   accessToken?: AccessToken;
-  errors?: TokenResponseErrors;
+  errors?: LoginResponseErrors;
+}
+
+export interface MeResponseErrors {
+  uid: string;
+}
+export interface MeResponse {
+  username?: string;
+  errors?: MeResponseErrors;
 }
