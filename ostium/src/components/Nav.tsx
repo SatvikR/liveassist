@@ -4,6 +4,7 @@ import { Box, Link, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
 import { useMeQuery } from "../lib/api-hooks/useMeQuery";
+import { gradient } from "./constants";
 
 export interface NavProps {}
 
@@ -17,7 +18,7 @@ export const Nav: React.FC<NavProps> = ({}) => {
           <Link
             fontSize="3xl"
             fontWeight="bold"
-            bgGradient="linear(to-l, #7928CA,#FF0080)"
+            bgGradient={gradient}
             bgClip="text"
           >
             LiveAssist

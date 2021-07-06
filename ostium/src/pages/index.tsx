@@ -2,7 +2,7 @@ import { Channel } from "@liveassist/liber";
 import { GetServerSideProps } from "next";
 import { DefaultPage } from "../components/DefaultPage";
 import { api } from "../lib/api";
-import { Channels } from "../modules/channels/Channels";
+import { Channels } from "../ui/channels/Channels";
 
 interface IndexProps {
   channels: Channel[];
