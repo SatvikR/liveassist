@@ -20,20 +20,16 @@ type ErrorField struct {
 // 	),
 // 	// returns
 // 	{
-// 		"errors": [
-// 			{
-// 				"password": "incorrect password"
-// 			}
-// 		]
+// 		"errors": {
+// 			"password": "incorrect password"
+// 		}
 // 	}
 func CreateErrJSON(errs []ErrorField) gin.H {
-	errList := make([]gin.H, len(errs))
-	for i, v := range errs {
-		errList[i] = gin.H{
-			v.Field: v.Err.Error(),
-		}
+	errsMap := make(map[string]string)
+	for _, v := range errs {
+		errsMap[v.Field] = v.Err.Error()
 	}
 	return gin.H{
-		"errors": errList,
+		"errors": errsMap,
 	}
 }
