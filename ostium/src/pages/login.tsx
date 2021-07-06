@@ -1,6 +1,6 @@
 import React from "react";
 import { DefaultPage } from "../components/DefaultPage";
-import { Login } from "../modules/auth/Login";
+import { Login } from "../ui/users/Login";
 
 export interface LoginPageProps {}
 

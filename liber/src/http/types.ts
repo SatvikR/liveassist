@@ -20,6 +20,15 @@ export interface LoginResponse {
   errors?: LoginResponseErrors;
 }
 
+export interface SignupResopnseErrors {
+  username?: string;
+  email?: string;
+  password?: string;
+}
+export interface SignupResponse {
+  accessToken?: AccessToken;
+  errors?: SignupResopnseErrors;
+}
 export interface MeResponseErrors {
   uid: string;
 }

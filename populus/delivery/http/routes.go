@@ -36,19 +36,35 @@ func signup(c *gin.Context) {
 	if err != nil {
 		switch err {
 		case domain.ErrHashFailed:
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(
+				http.StatusInternalServerError,
+				errutil.CreateErrJSON(
+					[]errutil.ErrorField{
+						{Field: "server", Err: err},
+					},
+				),
+			)
 			return
 		case domain.ErrUserExists:
-			c.JSON(http.StatusConflict, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(
+				http.StatusConflict,
+				errutil.CreateErrJSON(
+					[]errutil.ErrorField{
+						{Field: "username", Err: err},
+						{Field: "email", Err: err},
+					},
+				),
+			)
 			return
 		case omnis.ErrTokenGenFailed:
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(
+				http.StatusInternalServerError,
+				errutil.CreateErrJSON(
+					[]errutil.ErrorField{
+						{Field: "server", Err: err},
+					},
+				),
+			)
 			return
 		}
 		return

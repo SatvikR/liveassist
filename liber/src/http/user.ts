@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { BaseService } from "./service";
-import { LoginResponse, MeResponse } from "./types";
+import { LoginResponse, MeResponse, SignupResponse } from "./types";
 
 export class UserService extends BaseService {
   private readonly BASE_PATH = "/api/users";
@@ -20,6 +20,27 @@ export class UserService extends BaseService {
       return res.data;
     } catch (_e) {
       const error = _e as AxiosError<LoginResponse>;
+      return error.response.data;
+    }
+  }
+
+  public async signup(
+    username: string,
+    email: string,
+    password: string
+  ): Promise<SignupResponse> {
+    try {
+      const res = await this.api.post<SignupResponse>(
+        `${this.BASE_PATH}/signup`,
+        {
+          username,
+          email,
+          password,
+        }
+      );
+      return res.data;
+    } catch (_e) {
+      const error = _e as AxiosError<SignupResponse>;
       return error.response.data;
     }
   }
