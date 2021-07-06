@@ -20,7 +20,7 @@ export class UserService extends BaseService {
       return res.data;
     } catch (_e) {
       const error = _e as AxiosError<TokenResponse>;
-      console.log(error.response.data);
+      return error.response.data;
     }
   }
 }
