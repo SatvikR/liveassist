@@ -6,6 +6,7 @@ import (
 
 	"github.com/SatvikR/liveassist/clavis"
 	"github.com/SatvikR/liveassist/omnis"
+	"github.com/SatvikR/liveassist/omnis/errutil"
 	"github.com/SatvikR/liveassist/populus/config"
 	"github.com/SatvikR/liveassist/populus/domain"
 	"github.com/gin-gonic/gin"
@@ -77,19 +78,34 @@ func login(c *gin.Context) {
 	if err != nil {
 		switch err {
 		case domain.ErrWrongPassword:
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(
+				http.StatusUnauthorized,
+				errutil.CreateErrJSON(
+					[]errutil.ErrorField{
+						{Field: "password", Err: err},
+					},
+				),
+			)
 			return
 		case omnis.ErrTokenGenFailed:
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(
+				http.StatusInternalServerError,
+				errutil.CreateErrJSON(
+					[]errutil.ErrorField{
+						{Field: "password", Err: err},
+					},
+				),
+			)
 			return
 		case domain.ErrUserNotFound:
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(
+				http.StatusUnauthorized,
+				errutil.CreateErrJSON(
+					[]errutil.ErrorField{
+						{Field: "username", Err: err},
+					},
+				),
+			)
 			return
 		}
 		return
