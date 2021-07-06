@@ -61,7 +61,7 @@ func removeDuplicateKeywords(keywords []string) []string {
 
 func delete(c *gin.Context) {
 	id := c.Param("id")
-	err := domain.Delete(id, c.GetInt("uid"))
+	err := domain.Delete(id, int(c.GetInt64("uid")))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "could not delete channel",
