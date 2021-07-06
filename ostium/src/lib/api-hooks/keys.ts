@@ -1,3 +1,9 @@
 export class QueryKeys {
-  static readonly channels = "channels";
+  static get channels(): string {
+    return "channels";
+  }
+
+  static get me(): string {
+    return "me";
+  }
 }

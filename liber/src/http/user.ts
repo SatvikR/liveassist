@@ -1,6 +1,6 @@
-import { LoginResponse, MeResponse } from "./types";
-import { BaseService } from "./service";
 import { AxiosError } from "axios";
+import { BaseService } from "./service";
+import { LoginResponse, MeResponse } from "./types";
 
 export class UserService extends BaseService {
   private readonly BASE_PATH = "/api/users";
