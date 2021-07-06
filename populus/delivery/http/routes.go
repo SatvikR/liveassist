@@ -2,6 +2,7 @@
 package http
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/SatvikR/liveassist/clavis"
@@ -120,4 +121,20 @@ func login(c *gin.Context) {
 func logout(c *gin.Context) {
 	clavis.SetRefreshTokenCookie(c, "", config.Domain)
 	c.Status(http.StatusOK)
+}
+
+func me(c *gin.Context) {
+	user, err := domain.Me(c.GetInt64("uid"))
+	if err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			errutil.CreateErrJSON(
+				[]errutil.ErrorField{
+					{Field: "uid", Err: errors.New("user not found")},
+				},
+			),
+		)
+		return
+	}
+	c.JSON(http.StatusFound, user)
 }

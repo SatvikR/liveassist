@@ -37,3 +37,15 @@ func FindUserByUsername(username string) (*User, error) {
 
 	return user, nil
 }
+
+// FindUserByID finds the user data given a user id
+func FindUserByID(userId int64) (*User, error) {
+	user := new(User)
+	if err := db.Model(user).
+		Where("? = ?", pg.Ident("id"), userId).
+		Select(); err != nil {
+		return (*User)(nil), err
+	}
+
+	return user, nil
+}
