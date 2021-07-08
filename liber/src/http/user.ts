@@ -58,4 +58,8 @@ export class UserService extends BaseService {
       return error.response.data;
     }
   }
+
+  public async logout(): Promise<void> {
+    return await this.api.delete(`${this.BASE_PATH}/logout`);
+  }
 }
