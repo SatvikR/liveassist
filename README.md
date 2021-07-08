@@ -60,4 +60,5 @@ MIT
 - [ ] All services: Input schema validation
 - [ ] Profile page with users' channels
 - [ ] Search by keyword
+- [ ] Login redirects
 - [ ] SCHEMA VALIDATION

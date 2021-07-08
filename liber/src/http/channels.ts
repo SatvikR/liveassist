@@ -12,7 +12,8 @@ export class ChannelService extends BaseService {
 
   public async create(
     name: string,
-    keywords: string[]
+    keywords: string[],
+    token: string
   ): Promise<CreateChannelResponse> {
     try {
       const res = await this.api.post<CreateChannelResponse>(
@@ -20,6 +21,11 @@ export class ChannelService extends BaseService {
         {
           name,
           keywords,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       return res.data;
