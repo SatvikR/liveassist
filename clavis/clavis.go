@@ -90,15 +90,28 @@ func getKeyFunc(tokenType TokenType, key []byte) jwt.Keyfunc {
 
 // SetRefreshTokenCookie sets a refresh token cookie
 func SetRefreshTokenCookie(c *gin.Context, refToken string, domain string) {
-	c.SetCookie(
-		RefreshTokenCookie,
-		refToken,
-		int(RefreshTokenDuration),
-		omnis.RefreshRoute,
-		domain,
-		false,
-		true,
-	)
+	if gin.Mode() == gin.DebugMode {
+		c.SetCookie(
+			RefreshTokenCookie,
+			refToken,
+			int(RefreshTokenDuration),
+			omnis.RefreshRoute,
+			"",
+			false,
+			true,
+		)
+	} else {
+		c.SetSameSite(http.SameSiteNoneMode)
+		c.SetCookie(
+			RefreshTokenCookie,
+			refToken,
+			int(RefreshTokenDuration),
+			omnis.RefreshRoute,
+			domain,
+			true,
+			true,
+		)
+	}
 }
 
 // GenerateTokenPair generates an accessToken and a refresh token from a user id

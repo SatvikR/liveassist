@@ -39,7 +39,7 @@ func GetDomain() []string {
 	if gin.Mode() == gin.ReleaseMode {
 		origins = []string{"https://liveassist.satvikreddy.com"}
 	} else {
-		origins = []string{"http://localhost:3000"}
+		origins = []string{"http://localhost:3000", "http://127.0.0.1:3000"}
 	}
 	return origins
 }
@@ -49,7 +49,7 @@ func GetCors() gin.HandlerFunc {
 	corsConfig := cors.Config{
 		AllowOrigins:     origins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Set-Cookie"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
