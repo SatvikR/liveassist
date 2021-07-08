@@ -41,3 +41,8 @@ export interface RefreshResponse {
   accessToken?: string;
   error?: string;
 }
+
+export interface CreateChannelResponse {
+  id?: string;
+  error?: string;
+}
