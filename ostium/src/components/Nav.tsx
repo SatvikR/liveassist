@@ -1,8 +1,22 @@
-import { ArrowForwardIcon } from "@chakra-ui/icons";
+import {
+  ArrowBackIcon,
+  ArrowForwardIcon,
+  HamburgerIcon,
+} from "@chakra-ui/icons";
 import { Flex } from "@chakra-ui/layout";
-import { Box, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  IconButton,
+  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
+import { useLogout } from "../lib/api-hooks/useLogout";
 import { useMeQuery } from "../lib/api-hooks/useMeQuery";
 import { gradient } from "./constants";
 
@@ -10,6 +24,7 @@ export interface NavProps {}
 
 export const Nav: React.FC<NavProps> = ({}) => {
   const { isLoading, data, isError } = useMeQuery();
+  const logout = useLogout();
 
   return (
     <Flex top={0} p={4}>
@@ -29,12 +44,31 @@ export const Nav: React.FC<NavProps> = ({}) => {
         {!isLoading &&
           (isError || !data ? (
             <NextLink href="/login">
-              <Link mr={8}>
+              <Link mr={8} my="auto">
                 Login <ArrowForwardIcon mb={0.5} />
               </Link>
             </NextLink>
           ) : (
-            <Text>{data.username}</Text>
+            <Flex>
+              <Text fontSize="large" my="auto">
+                {data.username}
+              </Text>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="options"
+                  icon={<HamburgerIcon />}
+                  variant="outline"
+                  borderRadius={5}
+                  mx={4}
+                ></MenuButton>
+                <MenuList>
+                  <MenuItem icon={<ArrowBackIcon />} onClick={logout}>
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
           ))}
       </Box>
     </Flex>
