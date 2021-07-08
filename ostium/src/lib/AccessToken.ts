@@ -25,6 +25,10 @@ export class AccessToken {
     this.exp = jwtDecode<JwtPayload>(this.token).exp;
   }
 
+  public reset() {
+    this.token = null;
+  }
+
   public isExp(): boolean {
     if (this.token == null) {
       return true;
