@@ -37,7 +37,7 @@ MIT
 - [ ] Start frontend and implement all the features currently available in the backend
 - [ ] Tie up loose ends in the backend, (mainly update/delete routes)
 - [ ] Finish up frontend with the new backend routes and tie up loose ends (including [#14](https://github.com/SatvikR/liveassist/issues/14) and [#15](https://github.com/SatvikR/liveassist/issues/15))
-- [ ] Add email functionality (things like[#12](https://github.com/SatvikR/liveassist/issues/12) and [#13](https://github.com/SatvikR/liveassist/issues/13))
+- [ ] Add email functionality (things like [#12](https://github.com/SatvikR/liveassist/issues/12) and [#13](https://github.com/SatvikR/liveassist/issues/13))
 
 ## TODO
 
