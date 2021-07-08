@@ -1,6 +1,6 @@
 import { Channel } from "@liveassist/liber";
 import { GetServerSideProps } from "next";
-import { DefaultPage } from "../components/DefaultPage";
+import { PageLayout } from "../components/PageLayout";
 import { api } from "../lib/api";
 import { Channels } from "../ui/channels/Channels";
 
@@ -10,9 +10,9 @@ interface IndexProps {
 
 const Index: React.FC<IndexProps> = ({ channels }) => {
   return (
-    <DefaultPage>
+    <PageLayout>
       <Channels channels={channels} />
-    </DefaultPage>
+    </PageLayout>
   );
 };
 
