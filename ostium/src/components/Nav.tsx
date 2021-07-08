@@ -42,7 +42,7 @@ export const Nav: React.FC<NavProps> = ({}) => {
       </Box>
       <Box ml="auto">
         {!isLoading &&
-          (isError || !data ? (
+          (isError || !data?.username ? (
             <NextLink href="/login">
               <Link mr={8} my="auto">
                 Login <ArrowForwardIcon mb={0.5} />
