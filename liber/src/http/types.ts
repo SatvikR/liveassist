@@ -36,3 +36,8 @@ export interface MeResponse {
   username?: string;
   errors?: MeResponseErrors;
 }
+
+export interface RefreshResponse {
+  accessToken?: string;
+  error?: string;
+}

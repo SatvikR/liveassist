@@ -9,16 +9,20 @@ export const useMeQuery = (): {
   data: MeResponse | null;
   isError: boolean;
 } => {
-  if (!AccessToken.value) {
-    return {
-      isLoading: false,
-      data: null,
-      isError: false,
-    };
-  }
+  const accTok = AccessToken.getInstance();
+
   const { isLoading, data, isError } = useQuery(
     QueryKeys.me,
-    () => api.users.me(AccessToken.value),
+    async () => {
+      if (accTok.isExp()) {
+        const ntok = await api.tokens.refresh();
+        if (!ntok) {
+          return null;
+        }
+        accTok.value = ntok;
+      }
+      return await api.users.me(accTok.value);
+    },
     {
       refetchInterval: false,
     }

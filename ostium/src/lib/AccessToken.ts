@@ -1,11 +1,34 @@
-export class AccessToken {
-  private static token: string | null = null;
+import jwtDecode, { JwtPayload } from "jwt-decode";
 
-  static get value(): string | null {
+export class AccessToken {
+  private token: string | null;
+  private exp: number;
+  private static instance: AccessToken;
+
+  private constructor() {
+    this.token = null;
+  }
+
+  public static getInstance(): AccessToken {
+    if (!AccessToken.instance) {
+      AccessToken.instance = new AccessToken();
+    }
+    return AccessToken.instance;
+  }
+
+  public get value(): string | null {
     return this.token;
   }
 
-  static set value(ntoken: string) {
+  public set value(ntoken: string) {
     this.token = ntoken;
+    this.exp = jwtDecode<JwtPayload>(this.token).exp;
+  }
+
+  public isExp(): boolean {
+    if (this.token == null) {
+      return true;
+    }
+    return this.exp < Date.now() / 1000;
   }
 }

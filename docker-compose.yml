@@ -14,7 +14,7 @@ services:
       - DB_NAME=liveassist_populus
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
       - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
-      - DOMAIN=localhost
+      - DOMAIN=127.0.0.1
       - MQ_URL=amqp://lassist:lassist@rabbitmq:5672
       - PORT=8080
     expose:
@@ -67,7 +67,7 @@ services:
     environment:
       - ACCESS_TOKEN_SECRET=UaUs7cC9ckzq2EZdTGTo8voSBrHPuB7R
       - REFRESH_TOKEN_SECRET=hBmarZeJBmi3Hd0FEX4KYrKv7Yb2nlGX
-      - DOMAIN=localhost
+      - DOMAIN=127.0.0.1
       - PORT=8080
     expose:
       - 8080
