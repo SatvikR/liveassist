@@ -10,7 +10,7 @@ export const useLogin = () => {
     const data = await api.users.login(username, password);
 
     if (!data.errors) {
-      AccessToken.value = data.accessToken;
+      AccessToken.getInstance().value = data.accessToken;
       queryClient.invalidateQueries(QueryKeys.me);
     }
 

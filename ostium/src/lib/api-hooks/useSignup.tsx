@@ -14,7 +14,7 @@ export const useSignup = () => {
     const data = await api.users.signup(username, email, password);
 
     if (!data.errors) {
-      AccessToken.value = data.accessToken;
+      AccessToken.getInstance().value = data.accessToken;
       queryClient.invalidateQueries(QueryKeys.me);
     }
 

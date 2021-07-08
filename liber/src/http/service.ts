@@ -7,7 +7,7 @@ export class BaseService {
     this._api = api;
   }
 
-  get api(): AxiosInstance {
+  protected get api(): AxiosInstance {
     return this._api;
   }
 }

@@ -26,15 +26,16 @@ export const Nav: React.FC<NavProps> = ({}) => {
         </NextLink>
       </Box>
       <Box ml="auto">
-        {isLoading || isError || !data ? (
-          <NextLink href="/login">
-            <Link mr={8}>
-              Login <ArrowForwardIcon mb={0.5} />
-            </Link>
-          </NextLink>
-        ) : (
-          <Text>{data.username}</Text>
-        )}
+        {!isLoading &&
+          (isError || !data ? (
+            <NextLink href="/login">
+              <Link mr={8}>
+                Login <ArrowForwardIcon mb={0.5} />
+              </Link>
+            </NextLink>
+          ) : (
+            <Text>{data.username}</Text>
+          ))}
       </Box>
     </Flex>
   );
