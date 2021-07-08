@@ -25,6 +25,7 @@ export const useMeQuery = (): {
     },
     {
       refetchInterval: false,
+      refetchOnMount: false,
     }
   );
 
