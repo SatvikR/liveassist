@@ -1,14 +1,14 @@
 import React from "react";
-import { DefaultPage } from "../components/DefaultPage";
+import { PageLayout } from "../components/PageLayout";
 import { Signup } from "../ui/users/Signup";
 
 export interface SignupPageProps {}
 
 const SignupPage: React.FC<SignupPageProps> = ({}) => {
   return (
-    <DefaultPage>
+    <PageLayout>
       <Signup />
-    </DefaultPage>
+    </PageLayout>
   );
 };
 

@@ -3,6 +3,7 @@ import { MeResponse } from "@liveassist/liber";
 import { AccessToken } from "../AccessToken";
 import { api } from "../api";
 import { QueryKeys } from "./keys";
+import { useLoggedIn } from "../state/useLoggedIn";
 
 export const useMeQuery = (): {
   isLoading: boolean;
@@ -10,6 +11,7 @@ export const useMeQuery = (): {
   isError: boolean;
 } => {
   const accTok = AccessToken.getInstance();
+  const setLoginStatus = useLoggedIn((state) => state.setStatus);
 
   const { isLoading, data, isError } = useQuery(
     QueryKeys.me,
@@ -17,9 +19,11 @@ export const useMeQuery = (): {
       if (accTok.isExp()) {
         const ntok = await api.tokens.refresh();
         if (!ntok) {
+          setLoginStatus(false);
           return null;
         }
         accTok.value = ntok;
+        setLoginStatus(true);
       }
       return await api.users.me(accTok.value);
     },

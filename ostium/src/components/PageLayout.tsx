@@ -4,7 +4,7 @@ import { Nav } from "./Nav";
 
 export interface DefaultPageProps {}
 
-export const DefaultPage: React.FC<DefaultPageProps> = ({ children }) => {
+export const PageLayout: React.FC<DefaultPageProps> = ({ children }) => {
   return (
     <>
       <Nav />
