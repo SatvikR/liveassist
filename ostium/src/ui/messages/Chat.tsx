@@ -1,20 +1,19 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Input,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import { Message } from "@liveassist/liber";
+import { Box, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
+import { Message as IMessage } from "@liveassist/liber";
+import { Form, Formik, FormikProps } from "formik";
 import React, { useRef, useState } from "react";
+import { InputField } from "../../components/InputField";
 import { StyledButton } from "../../components/StyledButton";
 import { useChannel } from "../../lib/api-hooks/useChannel";
 import { useMessageClient } from "../../lib/api-hooks/useMessageClient";
+import { Message } from "./Message";
 
 export interface ChatProps {
   id: string;
+}
+
+interface MessageForm {
+  message: string;
 }
 
 export const Chat: React.FC<ChatProps> = ({ id }) => {
@@ -22,8 +21,7 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
     return null;
   }
 
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [msg, setMsg] = useState<string>("");
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const bottomMsg = useRef<HTMLDivElement>(null);
 
   const { isLoading, data, isError } = useChannel(id);
@@ -58,41 +56,34 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
             <Heading>{data.name}</Heading>
           </Box>
           <Stack overflowY="auto" height="75vh" spacing={4}>
-            {messages.map((e, i) => {
-              const isFirst = i == 0 ? { mt: "auto" } : {};
-
-              return (
-                <Box borderTopWidth="1px" key={i} {...isFirst}>
-                  <Flex>
-                    <Box>
-                      <Text fontWeight="bold">{e.owner.username}</Text>
-                    </Box>
-                    <Box ml={8}>
-                      <Text>{new Date(e.createdAt).toLocaleString()}</Text>
-                    </Box>
-                  </Flex>
-                  <Text>{e.text}</Text>
-                </Box>
-              );
-            })}
+            {messages.map((e, i) => (
+              <Message isFirst={i == 0} message={e} key={i} />
+            ))}
             <Box ref={bottomMsg}></Box>
           </Stack>
-          <Flex my={2}>
-            <Input
-              placeholder="Send a message"
-              value={msg}
-              onChange={(e) => setMsg(e.target.value)}
-            />
-            <StyledButton
-              ml={4}
-              onClick={(_) => {
-                setMsg("");
-                client.current.send(msg);
-              }}
-            >
-              Send
-            </StyledButton>
-          </Flex>
+          <Formik
+            initialValues={{ message: "" }}
+            onSubmit={async ({ message }, { setSubmitting, resetForm }) => {
+              resetForm();
+              client.current.send(message);
+              setSubmitting(false);
+            }}
+          >
+            {(props: FormikProps<MessageForm>) => (
+              <Form>
+                <Flex>
+                  <InputField
+                    name="message"
+                    label=""
+                    placeholder="Send a message"
+                  />
+                  <StyledButton ml={4} my="auto" type="submit">
+                    Send
+                  </StyledButton>
+                </Flex>
+              </Form>
+            )}
+          </Formik>
         </Box>
       )}
     </>
