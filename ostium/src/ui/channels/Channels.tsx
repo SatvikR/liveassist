@@ -1,13 +1,12 @@
 import { Heading } from "@chakra-ui/layout";
-import { Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Box, chakra, Flex, Spinner, Text } from "@chakra-ui/react";
 import { Channel as IChannel } from "@liveassist/liber";
+import NextLink from "next/link";
 import React from "react";
+import { StyledButton } from "../../components/StyledButton";
 import { useChannels } from "../../lib/api-hooks/useChannels";
 import { Channel } from "./Channel";
-import NextLink from "next/link";
-import { StyledButton } from "../../components/StyledButton";
-import { useRouter } from "next/dist/client/router";
-import { useLoggedIn } from "../../lib/state/useLoggedIn";
+import { useRouter } from "next/router";
 
 export interface ChannelsProps {
   channels: IChannel[];
@@ -16,9 +15,6 @@ export interface ChannelsProps {
 export const Channels: React.FC<ChannelsProps> = ({ channels }) => {
   const { isLoading, data, isError } = useChannels(channels);
   const router = useRouter();
-  const loggedIn = useLoggedIn((state) => state.loggedIn);
-  const loading = useLoggedIn((state) => state.loading);
-  console.log(`loggedin: ${loggedIn}, loading: ${loading}`);
 
   let body: JSX.Element;
   if (isLoading) {
@@ -37,7 +33,15 @@ export const Channels: React.FC<ChannelsProps> = ({ channels }) => {
     body = (
       <Box my={12}>
         {data.map((e) => (
-          <Channel channel={e} key={e.id} />
+          <NextLink href={`/channel/${e.id}`} key={e.id}>
+            <chakra.a
+              textDecor="none"
+              color="black"
+              _hover={{ cursor: "pointer" }}
+            >
+              <Channel channel={e} />
+            </chakra.a>
+          </NextLink>
         ))}
       </Box>
     );

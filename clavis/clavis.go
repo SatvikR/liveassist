@@ -186,3 +186,36 @@ func JWTAuthMiddleware(accessKey []byte) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+// JWTAuthURLMiddleware makes sure a request is authenticated but assumes that
+// token is stored in a query parameter in the URL called token.
+func JWTAuthURLMiddleware(accessKey []byte) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := c.Query("token")
+		if token == "" {
+			c.AbortWithStatusJSON(
+				http.StatusUnauthorized,
+				gin.H{
+					"error": "no authorization token",
+				},
+			)
+		}
+
+		claims, err := VerifyToken(token, AccessToken, accessKey)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid token",
+			})
+			return
+		}
+		if claims.Type != AccessToken {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "invalid token",
+			})
+			return
+		}
+
+		c.Set("uid", claims.ID)
+		c.Next()
+	}
+}
