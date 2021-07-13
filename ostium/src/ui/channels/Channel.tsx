@@ -1,6 +1,6 @@
-import React from "react";
-import { Channel as IChannel } from "@liveassist/liber";
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { Channel as IChannel } from "@liveassist/liber";
+import React from "react";
 
 export interface ChannelProps {
   channel: IChannel;

@@ -1,13 +1,13 @@
 import { Box, Heading, Link, Text } from "@chakra-ui/react";
 import { Form, Formik, FormikProps } from "formik";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { gradient } from "../../components/constants";
 import { Container } from "../../components/Container";
 import { InputField } from "../../components/InputField";
 import { StyledButton } from "../../components/StyledButton";
 import { useLogin } from "../../lib/api-hooks/useLogin";
-import NextLink from "next/link";
-import { gradient } from "../../components/constants";
 
 export interface LoginProps {}
 interface LoginValues {

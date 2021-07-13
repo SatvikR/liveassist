@@ -1,7 +1,7 @@
-import { UserService } from "./user";
 import axios, { AxiosInstance } from "axios";
 import { ChannelService } from "./channels";
 import { TokenService } from "./token";
+import { UserService } from "./user";
 
 const BASE_URL = "https://lapi.satvikreddy.com";
 
