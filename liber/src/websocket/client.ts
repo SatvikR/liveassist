@@ -1,23 +1,41 @@
 import WebSocket from "isomorphic-ws";
+import { Message } from "./types";
 
-const BASE_URL = "wss://lapi.satvikreddy.com";
+const BASE_URL = "wss://lapi.satvikreddy.com/messages/ws/";
 
 export class MessagingClient {
   private url: string;
-  private socket: WebSocket;
-  private callback: (message: string) => any;
+  private socket: WebSocket | undefined;
+  private messageCallback: (message: Message) => any;
+  private connectCallback: () => any;
 
-  public constructor(callback: (message: string) => any, url?: string) {
+  public constructor(
+    messageCallback: (message: Message) => any,
+    connectCallback: () => any,
+    url?: string
+  ) {
     this.url = url || BASE_URL;
-    this.callback = callback;
+    if (this.url[this.url.length - 1] != "/") {
+      this.url = this.url + "/";
+    }
+    this.messageCallback = messageCallback;
+    this.connectCallback = connectCallback;
   }
 
-  public connect() {
-    this.socket = new WebSocket(this.url);
-    this.socket.onmessage = (e) => this.callback(e.data as string);
+  public connect(channel: string, token: string) {
+    this.socket = new WebSocket(
+      `${this.url}?channel=${channel}&token=${token}`
+    );
+    this.socket.onmessage = (e) =>
+      this.messageCallback(JSON.parse(e.data as string));
+    this.socket.onopen = (_e) => this.connectCallback();
   }
 
-  public send(message: string) {
-    this.socket.send(message);
+  public send(text: string) {
+    this.socket.send(
+      JSON.stringify({
+        text,
+      })
+    );
   }
 }

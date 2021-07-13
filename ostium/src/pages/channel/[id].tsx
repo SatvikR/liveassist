@@ -1,8 +1,9 @@
 import { Heading } from "@chakra-ui/react";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import React from "react";
 import { AuthPage } from "../../components/AuthPage";
 import { PageLayout } from "../../components/PageLayout";
+import { Chat } from "../../ui/messages/Chat";
 
 export interface MessagingPageProps {}
 
@@ -13,7 +14,7 @@ const MessagingPage: React.FC<MessagingPageProps> = ({}) => {
   return (
     <AuthPage>
       <PageLayout>
-        <Heading>{id}</Heading>
+        <Chat id={id as string} />
       </PageLayout>
     </AuthPage>
   );

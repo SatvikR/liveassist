@@ -1,12 +1,12 @@
 import { Heading } from "@chakra-ui/layout";
 import { Box, chakra, Flex, Spinner, Text } from "@chakra-ui/react";
 import { Channel as IChannel } from "@liveassist/liber";
-import { useRouter } from "next/dist/client/router";
 import NextLink from "next/link";
 import React from "react";
 import { StyledButton } from "../../components/StyledButton";
 import { useChannels } from "../../lib/api-hooks/useChannels";
 import { Channel } from "./Channel";
+import { useRouter } from "next/router";
 
 export interface ChannelsProps {
   channels: IChannel[];

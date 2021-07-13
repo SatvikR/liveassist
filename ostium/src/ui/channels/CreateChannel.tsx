@@ -14,7 +14,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Form, Formik, FormikProps } from "formik";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { StyledButton } from "../../components/StyledButton";
