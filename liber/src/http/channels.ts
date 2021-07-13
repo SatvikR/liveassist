@@ -10,6 +10,16 @@ export class ChannelService extends BaseService {
     return res.data;
   }
 
+  public async get(id: string): Promise<Channel> {
+    try {
+      const res = await this.api.get<Channel>(`${this.BASE_PATH}/${id}`);
+      return res.data;
+    } catch (_e) {
+      const error = _e as AxiosError<Channel>;
+      return error.response.data;
+    }
+  }
+
   public async create(
     name: string,
     keywords: string[],

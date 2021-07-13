@@ -4,7 +4,7 @@ import { useRefreshToken } from "./useRefreshToken";
 import { MSG_URL } from "../api";
 import { AccessToken } from "../AccessToken";
 
-export const useMessages = (
+export const useMessageClient = (
   id: string,
   onMessage: (message: Message) => any
 ) => {

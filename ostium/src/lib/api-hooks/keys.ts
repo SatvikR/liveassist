@@ -6,4 +6,8 @@ export class QueryKeys {
   static get me(): string {
     return "me";
   }
+
+  static channel(id: string): string[] {
+    return ["channel", id];
+  }
 }
