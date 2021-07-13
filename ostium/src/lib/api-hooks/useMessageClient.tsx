@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
 import { Message, MessagingClient } from "@liveassist/liber";
-import { useRefreshToken } from "./useRefreshToken";
-import { MSG_URL } from "../api";
+import { useEffect, useRef, useState } from "react";
 import { AccessToken } from "../AccessToken";
+import { MSG_URL } from "../api";
+import { useRefreshToken } from "./useRefreshToken";
 
-export const useMessages = (
+export const useMessageClient = (
   id: string,
   onMessage: (message: Message) => any
 ) => {
