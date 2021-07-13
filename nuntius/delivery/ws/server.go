@@ -19,7 +19,7 @@ func StartServer(port int) {
 	go hub.start()
 	r := gin.Default()
 	r.Use(omnis.GetCors())
-	a := r.Use(clavis.JWTAuthMiddleware(config.AccessTokenKey))
+	a := r.Use(clavis.JWTAuthURLMiddleware(config.AccessTokenKey))
 	a.GET("/messages/ws", func(c *gin.Context) {
 		chanId := c.Query("channel")
 		if chanId != "" && domain.ChannelExists(chanId) {
