@@ -25,3 +25,15 @@ func ChannelExists(chanId string) bool {
 	_, err := db.FindChannel(chanId)
 	return err == nil
 }
+
+// LoadMessages loads the initial messages for a channel. This is used when a
+// client connects.
+// TODO: pagination
+func LoadMessages(chanId string) ([]db.Message, error) {
+	messages, err := db.FindInChannel(chanId)
+	if err != nil {
+		return []db.Message{}, err
+	}
+
+	return messages, nil
+}
