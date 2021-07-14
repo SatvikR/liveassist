@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
 import { Message as IMessage } from "@liveassist/liber";
 import { Form, Formik, FormikProps } from "formik";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { InputField } from "../../components/InputField";
 import { StyledButton } from "../../components/StyledButton";
 import { useChannel } from "../../lib/api-hooks/useChannel";
@@ -25,10 +25,33 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
   const bottomMsg = useRef<HTMLDivElement>(null);
 
   const { isLoading, data, isError } = useChannel(id);
-  const { isConnecting, client } = useMessageClient(id, (m) => {
-    setMessages((oldMessages) => [...oldMessages, m]);
-    bottomMsg.current.scrollIntoView({ behavior: "smooth" });
-  });
+  const { isConnecting, client } = useMessageClient(
+    id,
+    (m) => {
+      setMessages((oldMessages) => [...oldMessages, m]);
+      bottomMsg.current.scrollIntoView({ behavior: "smooth" });
+    },
+    (m) => {
+      setMessages(m);
+      if (bottomMsg.current) {
+        bottomMsg.current.scrollIntoView();
+      }
+    }
+  );
+
+  useEffect(() => {
+    if (bottomMsg.current) {
+      bottomMsg.current.scrollIntoView();
+    }
+
+    return;
+  }, [bottomMsg.current]);
+
+  useEffect(() => {
+    return () => {
+      client.current.close();
+    };
+  }, []);
 
   if (isLoading || isError) {
     return (
@@ -77,7 +100,12 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                     label=""
                     placeholder="Send a message"
                   />
-                  <StyledButton ml={4} my="auto" type="submit">
+                  <StyledButton
+                    ml={4}
+                    my="auto"
+                    type="submit"
+                    isLoading={props.isSubmitting}
+                  >
                     Send
                   </StyledButton>
                 </Flex>

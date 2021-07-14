@@ -88,7 +88,9 @@ export const CreateChannel: React.FC<CreateChannelProps> = ({}) => {
                 </HStack>
               </FormControl>
             </Box>
-            <StyledButton type="submit">Submit</StyledButton>
+            <StyledButton type="submit" isLoading={props.isSubmitting}>
+              Submit
+            </StyledButton>
           </Form>
         )}
       </Formik>
