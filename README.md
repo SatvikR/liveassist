@@ -58,13 +58,13 @@ MIT
 - [x] Replicate user data on nuntius
 - [x] Replicate channel data on nuntius
 - [ ] Retry postgres connection for amnis and populus
-- [ ] API client
+- [x] API client
 - [x] Global elements: navbar, container, etc.
-- [ ] Login/Signup/Logout
+- [x] Login/Signup/Logout
 - [x] Channels page
-- [ ] Create chnanel
-- [ ] Messaging page
-- [ ] Nuntius: add route for intiail messages load
+- [x] Create chnanel
+- [x] Messaging page
+- [x] Nuntius: add route for initial messages load
 - [ ] All services: Input schema validation
 - [ ] Profile page with users' channels
 - [ ] Search by keyword
