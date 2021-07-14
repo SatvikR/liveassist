@@ -90,6 +90,21 @@ func (h *hub) start() {
 	for {
 		select {
 		case client := <-h.register:
+			// send the client initial channel data
+			messages, err := domain.LoadMessages(client.chanId)
+			if err != nil {
+				client.conn.Close()
+				break
+			}
+			data, err := json.Marshal(messages)
+			if err != nil {
+				client.conn.Close()
+				break
+			}
+			client.send <- &message{
+				data:   data,
+				chanId: client.chanId,
+			}
 			// If a channel already exists with the clients chanId, add the user to that channel
 			if ch, ok := h.channels[client.chanId]; ok {
 				ch.clients[client] = true
