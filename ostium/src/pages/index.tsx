@@ -10,7 +10,7 @@ interface IndexProps {
 
 const Index: React.FC<IndexProps> = ({ channels }) => {
   return (
-    <PageLayout>
+    <PageLayout withHead>
       <Channels channels={channels} />
     </PageLayout>
   );

@@ -6,7 +6,7 @@ export interface LoginPageProps {}
 
 const LoginPage: React.FC<LoginPageProps> = ({}) => {
   return (
-    <PageLayout>
+    <PageLayout withHead>
       <Login />
     </PageLayout>
   );
