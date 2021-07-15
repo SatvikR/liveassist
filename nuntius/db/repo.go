@@ -147,3 +147,24 @@ func FindChannel(chanId string) (Channel, error) {
 	}
 	return channel, nil
 }
+
+// DeleteInChannel deletes all the messages in a channel
+func DeleteInChannel(chanId string) error {
+	queryFilter := bson.D{{Key: "channelId", Value: chanId}}
+
+	_, err := messages.DeleteMany(
+		context.Background(),
+		queryFilter,
+	)
+	return err
+}
+
+// DeleteChannel deletes a channel
+func DeleteChannel(chanId string) error {
+	queryFilter := bson.D{{Key: "cid", Value: chanId}}
+	_, err := channels.DeleteOne(
+		context.Background(),
+		queryFilter,
+	)
+	return err
+}

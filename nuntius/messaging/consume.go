@@ -78,6 +78,16 @@ func handleChMsg(data mq.ChannelMessage) error {
 	switch data.Event {
 	case mq.ChannelCreated:
 		return db.SaveChannel(data.ID)
+	case mq.ChannelDeleted:
+		if err := db.DeleteInChannel(data.ID); err != nil {
+			log.Printf("could not delete messages: %v", err)
+			return err
+		}
+		if err := db.DeleteChannel(data.ID); err != nil {
+			log.Printf("could not delete channel: %v", err)
+			return err
+		}
+		return nil
 	default:
 		return mq.ErrInvalidEvent
 	}
