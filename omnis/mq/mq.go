@@ -8,8 +8,11 @@ import (
 )
 
 const (
-	PopulusExchange string = "populus"
-	AmnisExchange   string = "amnis"
+	PopulusExchange      string = "populus"
+	AmnisExchange        string = "amnis"
+	AmnisUsersQueue      string = "amnis_users_q"
+	NuntiusUsersQueue    string = "nuntius_users_q"
+	NuntiusChannelsQueue string = "nuntius_chanels_q"
 )
 
 // events
