@@ -25,8 +25,8 @@ export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
   const { isConnecting, client } = useMessageClient(
     id,
     (m) => {
-      setMessages((oldMessages) => [...oldMessages, m]);
-      bottomMsg.current.scrollIntoView({ behavior: "smooth" });
+      setMessages((oldMessages) => [m, ...oldMessages]);
+      bottomMsg.current.scrollIntoView();
     },
     (m) => {
       setMessages(m);
@@ -75,11 +75,16 @@ export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
           <Box mb={4}>
             <Heading>{data.name}</Heading>
           </Box>
-          <Stack overflowY="auto" height="75vh" spacing={4}>
+          <Stack
+            overflowY="auto"
+            height="75vh"
+            spacing={4}
+            flexDir="column-reverse"
+          >
+            <Box ref={bottomMsg}></Box>
             {messages.map((e, i) => (
               <Message isFirst={i == 0} message={e} key={i} />
             ))}
-            <Box ref={bottomMsg}></Box>
           </Stack>
           <Formik
             initialValues={{ message: "" }}
