@@ -65,6 +65,9 @@ func Delete(id string, userId int) error {
 	if err != nil {
 		return ErrChannelDoesNotExist
 	}
+	if err := messaging.DispatchChannelDeleted(id); err != nil {
+		log.Printf("Unable to send message: %s", err.Error())
+	}
 
 	return nil
 }

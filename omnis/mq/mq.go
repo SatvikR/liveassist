@@ -16,6 +16,7 @@ const (
 const (
 	UserCreated    string = "USER_CREATED"
 	ChannelCreated string = "CHANNEL_CREATED"
+	ChannelDeleted string = "CHANNEL_DELETED"
 )
 
 var (
