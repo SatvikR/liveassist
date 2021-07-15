@@ -34,7 +34,7 @@ func Setup() error {
 	if _, err := mq.GetFanoutExchange(mq.AmnisExchange, ch); err != nil {
 		return err
 	}
-	_usersQueue, err := mq.GetNonDurableQueue(ch)
+	_usersQueue, err := mq.GetQueue(mq.NuntiusUsersQueue, ch)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func Setup() error {
 	if err := mq.BindQueue(usersQueue.Name, mq.PopulusExchange, ch); err != nil {
 		return err
 	}
-	_chQueue, err := mq.GetNonDurableQueue(ch)
+	_chQueue, err := mq.GetQueue(mq.NuntiusChannelsQueue, ch)
 	if err != nil {
 		return err
 	}
