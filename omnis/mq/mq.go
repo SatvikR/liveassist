@@ -10,6 +10,7 @@ import (
 const (
 	PopulusExchange string = "populus"
 	AmnisExchange   string = "amnis"
+	AmnisUsersQueue string = "amnis_users_q"
 )
 
 // events

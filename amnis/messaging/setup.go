@@ -30,7 +30,7 @@ func Setup() error {
 	if _, err := mq.GetFanoutExchange(mq.AmnisExchange, ch); err != nil {
 		return err
 	}
-	_queue, err := mq.GetNonDurableQueue(ch)
+	_queue, err := mq.GetQueue(mq.AmnisUsersQueue, ch)
 	if err != nil {
 		return err
 	}
