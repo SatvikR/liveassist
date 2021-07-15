@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { useLoggedIn } from "../lib/state/useLoggedIn";
-import { Nav } from "./Nav";
 
 export interface AuthPageProps {}
 
