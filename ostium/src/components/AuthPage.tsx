@@ -11,11 +11,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ children }) => {
   const router = useRouter();
 
   if (loginLoading) {
-    return (
-      <>
-        <Nav />
-      </>
-    );
+    return <></>;
   }
 
   if (!loginLoading && loggedIn) {

@@ -6,7 +6,7 @@ export interface SignupPageProps {}
 
 const SignupPage: React.FC<SignupPageProps> = ({}) => {
   return (
-    <PageLayout>
+    <PageLayout withHead>
       <Signup />
     </PageLayout>
   );

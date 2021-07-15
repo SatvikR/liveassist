@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
-import { Message as IMessage } from "@liveassist/liber";
+import { Channel, Message as IMessage } from "@liveassist/liber";
 import { Form, Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import { InputField } from "../../components/InputField";
@@ -10,21 +10,18 @@ import { Message } from "./Message";
 
 export interface ChatProps {
   id: string;
+  channel: Channel;
 }
 
 interface MessageForm {
   message: string;
 }
 
-export const Chat: React.FC<ChatProps> = ({ id }) => {
-  if (!id) {
-    return null;
-  }
-
+export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const bottomMsg = useRef<HTMLDivElement>(null);
 
-  const { isLoading, data, isError } = useChannel(id);
+  const { isLoading, data, isError } = useChannel(id, channel);
   const { isConnecting, client } = useMessageClient(
     id,
     (m) => {

@@ -7,11 +7,11 @@ export interface CreateChannelPageProps {}
 
 const CreateChannelPage: React.FC<CreateChannelPageProps> = ({}) => {
   return (
-    <AuthPage>
-      <PageLayout>
+    <PageLayout withHead>
+      <AuthPage>
         <CreateChannel />
-      </PageLayout>
-    </AuthPage>
+      </AuthPage>
+    </PageLayout>
   );
 };
 
