@@ -77,7 +77,7 @@ func FindInChannel(chanId string) ([]Message, error) {
 
 	queryFilter := bson.D{{Key: "channelId", Value: chanId}}
 	queryOptions := &options.FindOptions{}
-	queryOptions.SetSort(bson.D{{Key: "createdAt", Value: 1}})
+	queryOptions.SetSort(bson.D{{Key: "createdAt", Value: -1}})
 
 	cur, err := messages.Find(ctx, queryFilter, queryOptions)
 	if err != nil {
