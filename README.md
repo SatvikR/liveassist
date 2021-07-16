@@ -66,7 +66,7 @@ MIT
 - [x] Messaging page
 - [x] Nuntius: add route for initial messages load
 - [ ] All services: Input schema validation
-- [ ] Profile page with users' channels
+- [x] Profile page with users' channels
 - [ ] Search by keyword
 - [ ] Login redirects
 - [ ] SCHEMA VALIDATION
