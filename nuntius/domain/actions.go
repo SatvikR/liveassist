@@ -3,6 +3,7 @@ package domain
 
 import (
 	"log"
+	"time"
 
 	"github.com/SatvikR/liveassist/nuntius/db"
 	"github.com/SatvikR/liveassist/omnis"
@@ -29,8 +30,8 @@ func ChannelExists(chanId string) bool {
 // LoadMessages loads the initial messages for a channel. This is used when a
 // client connects.
 // TODO: pagination
-func LoadMessages(chanId string) ([]db.Message, error) {
-	messages, err := db.FindInChannel(chanId)
+func LoadMessages(chanId string, cursor time.Time) ([]db.Message, error) {
+	messages, err := db.FindInChannel(chanId, cursor)
 	if err != nil {
 		return []db.Message{}, err
 	}

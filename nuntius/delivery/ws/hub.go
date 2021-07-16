@@ -22,7 +22,8 @@ var upgrader = websocket.Upgrader{
 }
 
 type messageBody struct {
-	Text string `json:"text"`
+	Text     *string    `json:"text"`
+	LoadMore *time.Time `json:"loadMore"`
 }
 
 type message struct {
@@ -86,25 +87,33 @@ func newMessage(msgObj db.Message) (*message, error) {
 	}, nil
 }
 
+func rawMessage(body interface{}, chanId string) (*message, error) {
+	data, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	return &message{
+		data:   data,
+		chanId: chanId,
+	}, nil
+}
+
 func (h *hub) start() {
 	for {
 		select {
 		case client := <-h.register:
 			// send the client initial channel data
-			messages, err := domain.LoadMessages(client.chanId)
+			messages, err := domain.LoadMessages(client.chanId, time.Now())
 			if err != nil {
 				client.conn.Close()
 				break
 			}
-			data, err := json.Marshal(messages)
+			message, err := rawMessage(messages, client.chanId)
 			if err != nil {
 				client.conn.Close()
 				break
 			}
-			client.send <- &message{
-				data:   data,
-				chanId: client.chanId,
-			}
+			client.send <- message
 			// If a channel already exists with the clients chanId, add the user to that channel
 			if ch, ok := h.channels[client.chanId]; ok {
 				ch.clients[client] = true
@@ -146,12 +155,28 @@ func (c *client) readPump() {
 		}
 		var msgBody messageBody
 		if err = json.Unmarshal(message, &msgBody); err == nil {
-			msgObj, err := domain.SaveMessage(msgBody.Text, c.chanId, c.userId)
-			if err != nil {
-				log.Printf("error: %v", err)
+			if msgBody.Text != nil {
+				msgObj, err := domain.SaveMessage(*msgBody.Text, c.chanId, c.userId)
+				if err != nil {
+					log.Printf("error: %v", err)
+					continue
+				}
+				if pmessage, err := newMessage(msgObj); err == nil {
+					c.hub.broadcast <- pmessage
+				}
 			}
-			if pmessage, err := newMessage(msgObj); err == nil {
-				c.hub.broadcast <- pmessage
+			if msgBody.LoadMore != nil {
+				messages, err := domain.LoadMessages(c.chanId, *msgBody.LoadMore)
+				if err != nil {
+					log.Printf("error: %v", err)
+					continue
+				}
+				messageObj, err := rawMessage(messages, c.chanId)
+				if err != nil {
+					log.Printf("error: %v", err)
+					continue
+				}
+				c.send <- messageObj
 			}
 		}
 	}
