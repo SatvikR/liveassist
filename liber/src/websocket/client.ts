@@ -8,12 +8,14 @@ export class MessagingClient {
   private socket: WebSocket | undefined;
   private messageCallback: (message: Message) => any;
   private connectCallback: () => any;
-  private initialCallback: (messages: Message[]) => any;
+  private messagesCallback: (messages: Message[]) => any;
+
+  public readonly PAGE_SIZE = 30;
 
   public constructor(
     messageCallback: (message: Message) => any,
     connectCallback: () => any,
-    initialCallback: (messages: Message[]) => any,
+    messagesCallback: (messages: Message[]) => any,
     url?: string
   ) {
     this.url = url || BASE_URL;
@@ -22,18 +24,18 @@ export class MessagingClient {
     }
     this.messageCallback = messageCallback;
     this.connectCallback = connectCallback;
-    this.initialCallback = initialCallback;
+    this.messagesCallback = messagesCallback;
   }
 
   public handleMessage(e: WebSocket.MessageEvent) {
     const data = JSON.parse(e.data as string);
     if (!data) {
-      this.initialCallback([]);
+      this.messagesCallback([]);
       return;
     }
 
     if (Array.isArray(data)) {
-      this.initialCallback(data);
+      this.messagesCallback(data);
       return;
     }
 
@@ -58,5 +60,13 @@ export class MessagingClient {
 
   public close() {
     this.socket.close();
+  }
+
+  public loadMore(lastMessage: Message) {
+    this.socket.send(
+      JSON.stringify({
+        loadMore: lastMessage.createdAt,
+      })
+    );
   }
 }

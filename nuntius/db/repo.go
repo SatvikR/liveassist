@@ -12,6 +12,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const (
+	messageLimit int64 = 30
+)
+
 type Message struct {
 	ID        primitive.ObjectID `bson:"_id" json:"id,omitempty"`
 	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
@@ -71,13 +75,16 @@ func CreateMessage(text string, chanId string, userId int) (Message, error) {
 }
 
 // FindInChannel finds all the messages in a channel ordered by date
-// TODO pagination(?, maybe not)
-func FindInChannel(chanId string) ([]Message, error) {
+func FindInChannel(chanId string, cursor time.Time) ([]Message, error) {
 	ctx := context.Background()
 
-	queryFilter := bson.D{{Key: "channelId", Value: chanId}}
+	queryFilter := bson.D{
+		{Key: "channelId", Value: chanId},
+		{Key: "createdAt", Value: bson.D{{Key: "$lt", Value: cursor}}},
+	}
 	queryOptions := &options.FindOptions{}
 	queryOptions.SetSort(bson.D{{Key: "createdAt", Value: -1}})
+	queryOptions.SetLimit(messageLimit)
 
 	cur, err := messages.Find(ctx, queryFilter, queryOptions)
 	if err != nil {
@@ -89,6 +96,7 @@ func FindInChannel(chanId string) ([]Message, error) {
 	if err := cur.All(ctx, &messages); err != nil {
 		return nil, err
 	}
+	log.Printf("found messages")
 	return messages, nil
 }
 
