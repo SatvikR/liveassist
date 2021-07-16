@@ -44,4 +44,9 @@ export class ChannelService extends BaseService {
       return error.response.data;
     }
   }
+
+  public async getByUser(uid: number): Promise<Channel[]> {
+    const res = await this.api.get(`${this.BASE_PATH}/?userId=${uid}`);
+    return res.data;
+  }
 }
