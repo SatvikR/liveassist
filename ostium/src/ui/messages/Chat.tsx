@@ -17,32 +17,33 @@ interface MessageForm {
   message: string;
 }
 
+const LOAD_BOUNDARY = 10;
+
+const scrollRef = (r: React.MutableRefObject<HTMLDivElement>) => {
+  if (r.current) {
+    r.current.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
 export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
+  // hasMore stores whether or not the client can load more messages
+  const [hasMore, setHasMore] = useState<boolean>(false);
+
   const bottomMsg = useRef<HTMLDivElement>(null);
 
   const { isLoading, data, isError } = useChannel(id, channel);
   const { isConnecting, client } = useMessageClient(
     id,
-    (m) => {
-      setMessages((oldMessages) => [m, ...oldMessages]);
-      bottomMsg.current.scrollIntoView();
+    (message) => {
+      setMessages((currentMessages) => [message, ...currentMessages]);
+      scrollRef(bottomMsg);
     },
-    (m) => {
-      setMessages(m);
-      if (bottomMsg.current) {
-        bottomMsg.current.scrollIntoView();
-      }
+    (messages) => {
+      setHasMore(messages.length >= client.current.PAGE_SIZE);
+      setMessages((currentMessages) => [...currentMessages, ...messages]);
     }
   );
-
-  useEffect(() => {
-    if (bottomMsg.current) {
-      bottomMsg.current.scrollIntoView();
-    }
-
-    return;
-  }, [bottomMsg.current]);
 
   useEffect(() => {
     return () => {
@@ -64,6 +65,27 @@ export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
     );
   }
 
+  const handleScroll: React.UIEventHandler<HTMLDivElement> = (e) => {
+    // Use scrollHeight + scrollTop to compare rather than scrollHeight - scrollTop
+    // because we are technically checking a scroll to the bottom rather than a scroll to the top,
+    // since the flex direction is reversed.
+
+    // Use LOAD_BOUNDARY as a range to make the infinite scroll more seemless
+    if (
+      Math.abs(
+        e.currentTarget.scrollHeight +
+          e.currentTarget.scrollTop -
+          e.currentTarget.clientHeight
+      ) <= LOAD_BOUNDARY
+    ) {
+      if (hasMore) {
+        // Make sure client cannot send another loadMore request during the current one
+        setHasMore(false);
+        client.current.loadMore(messages[messages.length - 1]);
+      }
+    }
+  };
+
   return (
     <>
       {isConnecting ? (
@@ -80,6 +102,7 @@ export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
             height="75vh"
             spacing={4}
             flexDir="column-reverse"
+            onScroll={handleScroll}
           >
             <Box ref={bottomMsg}></Box>
             {messages.map((e, i) => (

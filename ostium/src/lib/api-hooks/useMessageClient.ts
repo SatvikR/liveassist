@@ -7,7 +7,7 @@ import { useRefreshToken } from "./useRefreshToken";
 export const useMessageClient = (
   id: string,
   onMessage: (message: Message) => any,
-  onInitial: (messages: Message[]) => any
+  onMessages: (messages: Message[]) => any
 ) => {
   const refreshToken = useRefreshToken();
   const [isConnecting, setConnecting] = useState<boolean>(true);
@@ -19,7 +19,7 @@ export const useMessageClient = (
       () => {
         setConnecting(false);
       },
-      onInitial,
+      onMessages,
       MSG_URL
     );
 
