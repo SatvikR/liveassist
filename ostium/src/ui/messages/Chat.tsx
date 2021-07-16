@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spinner, Stack, Text } from "@chakra-ui/react";
 import { Channel, Message as IMessage } from "@liveassist/liber";
 import { Form, Formik, FormikProps } from "formik";
 import React, { useEffect, useRef, useState } from "react";
@@ -94,12 +94,17 @@ export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
         </Box>
       ) : (
         <Box>
-          <Box mb={4}>
-            <Heading>{data.name}</Heading>
-          </Box>
+          <Flex>
+            <Text fontSize="xl" color="gray.300" mr={3}>
+              #
+            </Text>
+            <Text fontSize="xl" isTruncated>
+              {data.name}
+            </Text>
+          </Flex>
           <Stack
             overflowY="auto"
-            height="75vh"
+            h="80vh"
             spacing={4}
             flexDir="column-reverse"
             onScroll={handleScroll}
