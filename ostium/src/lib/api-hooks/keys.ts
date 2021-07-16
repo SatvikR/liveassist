@@ -7,7 +7,11 @@ export class QueryKeys {
     return "me";
   }
 
-  static channel(id: string): string[] {
+  static channel(id: string): [string, string] {
     return ["channel", id];
+  }
+
+  static userChannels(uid: number): [string, number] {
+    return ["userChannels", uid];
   }
 }
