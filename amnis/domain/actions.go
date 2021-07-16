@@ -96,6 +96,21 @@ func GetChannels() ([]Channel, error) {
 	return out, nil
 }
 
+// GetChannelsOwnedByUser returns all of the channels owned by a user
+func GetChannelsOwnedByUser(uid int) ([]Channel, error) {
+	c, err := db.FindChannelsWhereOwnerId(uid)
+	if err != nil {
+		return nil, ErrCannotFindChannels
+	}
+
+	out := make([]Channel, len(c))
+	for i, ch := range c {
+		out[i] = constructChannel(ch)
+	}
+
+	return out, nil
+}
+
 func constructChannel(c *db.Channel) Channel {
 	return Channel{
 		ID:       c.ID,

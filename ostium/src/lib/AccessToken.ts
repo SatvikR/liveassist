@@ -3,6 +3,7 @@ import jwtDecode, { JwtPayload } from "jwt-decode";
 export class AccessToken {
   private token: string | null;
   private exp: number;
+  private _userId: number;
   private static instance: AccessToken;
 
   private constructor() {
@@ -22,7 +23,9 @@ export class AccessToken {
 
   public set value(ntoken: string) {
     this.token = ntoken;
-    this.exp = jwtDecode<JwtPayload>(this.token).exp;
+    const decoded = jwtDecode<JwtPayload & { id: number }>(this.token);
+    this.exp = decoded.exp;
+    this._userId = decoded.id;
   }
 
   public reset() {
@@ -34,5 +37,9 @@ export class AccessToken {
       return true;
     }
     return this.exp < Date.now() / 1000;
+  }
+
+  public get userId(): number {
+    return this._userId;
   }
 }

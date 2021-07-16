@@ -12,6 +12,9 @@ export const useCreateChannel = () => {
     await refreshToken();
     await api.channels.create(title, keywords, AccessToken.getInstance().value);
     queryClient.invalidateQueries(QueryKeys.channels);
+    queryClient.invalidateQueries(
+      QueryKeys.userChannels(AccessToken.getInstance().userId)
+    );
   };
 
   return createChannel;

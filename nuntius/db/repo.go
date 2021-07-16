@@ -96,7 +96,6 @@ func FindInChannel(chanId string, cursor time.Time) ([]Message, error) {
 	if err := cur.All(ctx, &messages); err != nil {
 		return nil, err
 	}
-	log.Printf("found messages")
 	return messages, nil
 }
 

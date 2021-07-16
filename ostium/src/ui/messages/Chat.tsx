@@ -109,34 +109,36 @@ export const Chat: React.FC<ChatProps> = ({ id, channel }) => {
               <Message isFirst={i == 0} message={e} key={i} />
             ))}
           </Stack>
-          <Formik
-            initialValues={{ message: "" }}
-            onSubmit={async ({ message }, { setSubmitting, resetForm }) => {
-              resetForm();
-              client.current.send(message);
-              setSubmitting(false);
-            }}
-          >
-            {(props: FormikProps<MessageForm>) => (
-              <Form>
-                <Flex>
-                  <InputField
-                    name="message"
-                    label=""
-                    placeholder="Send a message"
-                  />
-                  <StyledButton
-                    ml={4}
-                    my="auto"
-                    type="submit"
-                    isLoading={props.isSubmitting}
-                  >
-                    Send
-                  </StyledButton>
-                </Flex>
-              </Form>
-            )}
-          </Formik>
+          <Box mt={4}>
+            <Formik
+              initialValues={{ message: "" }}
+              onSubmit={async ({ message }, { setSubmitting, resetForm }) => {
+                resetForm();
+                client.current.send(message);
+                setSubmitting(false);
+              }}
+            >
+              {(props: FormikProps<MessageForm>) => (
+                <Form>
+                  <Flex>
+                    <InputField
+                      name="message"
+                      label=""
+                      placeholder="Send a message"
+                    />
+                    <StyledButton
+                      ml={4}
+                      my="auto"
+                      type="submit"
+                      isLoading={props.isSubmitting}
+                    >
+                      Send
+                    </StyledButton>
+                  </Flex>
+                </Form>
+              )}
+            </Formik>
+          </Box>
         </Box>
       )}
     </>

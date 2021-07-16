@@ -3,6 +3,7 @@ package http
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/SatvikR/liveassist/amnis/domain"
 	"github.com/SatvikR/liveassist/omnis"
@@ -85,6 +86,28 @@ func channel(c *gin.Context) {
 }
 
 func channels(c *gin.Context) {
+	_uid := c.Query("userId")
+	if _uid != "" {
+		uid, err := strconv.Atoi(_uid)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "invalid uid",
+			})
+			return
+		}
+
+		channels, err := domain.GetChannelsOwnedByUser(uid)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "could not fetch channels",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, channels)
+		return
+	}
+
 	channels, err := domain.GetChannels()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

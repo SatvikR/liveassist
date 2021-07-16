@@ -94,3 +94,17 @@ func SaveUser(id int, username string) error {
 	}
 	return nil
 }
+
+// FindChannelsWhereOwnerId finds all the channels created by a user
+func FindChannelsWhereOwnerId(uid int) ([]*Channel, error) {
+	var channels []*Channel
+
+	if err := db.Model(&channels).
+		Relation("Owner").
+		Where("? = ?", pg.Ident("channel.owner_id"), uid).
+		Select(); err != nil {
+		return nil, err
+	}
+
+	return channels, nil
+}

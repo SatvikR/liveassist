@@ -10,11 +10,13 @@ import {
   Link,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
   Text,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { useLogout } from "../lib/api-hooks/useLogout";
 import { useMeQuery } from "../lib/api-hooks/useMeQuery";
@@ -25,6 +27,11 @@ export interface NavProps {}
 export const Nav: React.FC<NavProps> = ({}) => {
   const { isLoading, data, isError } = useMeQuery();
   const logout = useLogout();
+  const router = useRouter();
+
+  const goToProfile = () => {
+    router.push("/profile");
+  };
 
   return (
     <Flex top={0} p={4}>
@@ -63,6 +70,8 @@ export const Nav: React.FC<NavProps> = ({}) => {
                   mx={4}
                 ></MenuButton>
                 <MenuList>
+                  <MenuItem onClick={goToProfile}>Profile</MenuItem>
+                  <MenuDivider />
                   <MenuItem icon={<ArrowBackIcon />} onClick={logout}>
                     Logout
                   </MenuItem>
