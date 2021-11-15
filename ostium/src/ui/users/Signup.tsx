@@ -13,6 +13,7 @@ interface SignupValues {
   username: string;
   email: string;
   password: string;
+  repeatPassword: string;
 }
 
 export const Signup: React.FC<SignupProps> = ({}) => {
@@ -23,11 +24,22 @@ export const Signup: React.FC<SignupProps> = ({}) => {
     <Container size="small">
       <Heading>Signup</Heading>
       <Formik
-        initialValues={{ username: "", password: "", email: "" }}
+        initialValues={{
+          username: "",
+          password: "",
+          email: "",
+          repeatPassword: "",
+        }}
         onSubmit={async (
-          { username, email, password },
+          { username, email, password, repeatPassword },
           { setSubmitting, setErrors }
         ) => {
+          if (repeatPassword !== password) {
+            setErrors({ repeatPassword: "passwords do not match" });
+            setSubmitting(false);
+            return;
+          }
+
           const errors = await signup(username, email, password);
           if (!errors) {
             router.push("/");
@@ -54,6 +66,12 @@ export const Signup: React.FC<SignupProps> = ({}) => {
             <InputField
               name="password"
               label="Password"
+              placeholder="password"
+              type="password"
+            />
+            <InputField
+              name="repeatPassword"
+              label="Repeat Password"
               placeholder="password"
               type="password"
             />
