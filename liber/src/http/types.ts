@@ -46,3 +46,7 @@ export interface CreateChannelResponse {
   id?: string;
   error?: string;
 }
+
+export interface DeleteChannelResponse {
+  error?: string;
+}
