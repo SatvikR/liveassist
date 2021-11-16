@@ -2,7 +2,7 @@ import { Box, chakra, Spinner } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
 import { useUserChannels } from "../../lib/api-hooks/useUserChannels";
-import { Channel } from "../channels/Channel";
+import { UserChannel } from "../channels/UserChannel";
 import { UserData } from "./UserData";
 
 export interface ProfileProps {}
@@ -26,15 +26,7 @@ export const Profile: React.FC<ProfileProps> = ({}) => {
     body = (
       <>
         {data.map((e) => (
-          <NextLink href={`/channel/${e.id}`} key={e.id}>
-            <chakra.a
-              textDecor="none"
-              color="black"
-              _hover={{ cursor: "pointer" }}
-            >
-              <Channel channel={e} />
-            </chakra.a>
-          </NextLink>
+          <UserChannel channel={e} />
         ))}
       </>
     );

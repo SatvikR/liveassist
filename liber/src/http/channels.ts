@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { DeleteChannelResponse } from "..";
 import { BaseService } from "./service";
 import { Channel, CreateChannelResponse } from "./types";
 
@@ -41,6 +42,26 @@ export class ChannelService extends BaseService {
       return res.data;
     } catch (_e) {
       const error = _e as AxiosError<CreateChannelResponse>;
+      return error.response.data;
+    }
+  }
+
+  public async delete(
+    id: string,
+    token: string
+  ): Promise<DeleteChannelResponse> {
+    try {
+      const res = await this.api.delete<DeleteChannelResponse>(
+        `${this.BASE_PATH}/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res.data;
+    } catch (_e) {
+      const error = _e as AxiosError<DeleteChannelResponse>;
       return error.response.data;
     }
   }
